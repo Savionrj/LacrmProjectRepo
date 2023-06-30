@@ -3,8 +3,8 @@
 include_once('include/init.php');
 echoHeader('Log');
 
-$exerciseId = $_REQUEST['exerciseId'];
-$exerciseData = getSingleExercise($exerciseId);
+$exerciseIdPass = $_REQUEST['exerciseIdPass'];
+$exerciseData = getSingleExercise($exerciseIdPass);
 $user = getUser($_SESSION['userId']);
 
 echo "

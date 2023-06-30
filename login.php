@@ -18,17 +18,6 @@ if(isset($_REQUEST['login'])){
 
     verifyPassword();
     
-    // $verified = verifyPassword();
-
-    // if($verified){
-    //   $loggedIn = login();
-
-    //   if($loggedIn){
-    //   header("location: index.php");
-    // }
-    // }
-
-    
   }
 
   if(sizeof($errors) > 0){

@@ -5,9 +5,3 @@
     var_dump($array);
     echo "</pre>";
   }
-
-  // function verifyLogin(){
-  //   if(isset($_REQUEST['login'])){
-
-  //   }
-  // }

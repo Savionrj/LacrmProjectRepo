@@ -23,21 +23,17 @@ echo "
 
   </div>
 
-  <div id='session_display'>";
-    // listSessions();
+  <div id='exercises_list'>";
+    displayAllExercises();
   echo "</div>
 
   <div id='home_menu'>
-    <div>
-      
-    </div>
-
-    <div id='new_exercise'>
-
-    </div>
-
-    <div>
-    </div>
+    
+    <a href='add_exercise.php'>
+      <div id='home_menu_new_exercise_button'>
+        <h3 id='plus_mark_link'>+</h3>
+      </div>
+    </a>
 
   </div>
 

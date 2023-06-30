@@ -106,15 +106,13 @@ function getExercises(){
 
 }
 
-function getSingleExercise(){
-
-  $exerciseId = $exerciseId;
+function getSingleExercise($exerciseIdPass){
 
   $exerciseData = db_Query("
     SELECT *
     FROM exercise
-    WHERE exerciseId = '$exerciseId' 
-    ")->fetchAll();
+    WHERE exerciseId = '$exerciseIdPass' 
+    ")->fetch();
 
     return $exerciseData;
 
@@ -167,65 +165,30 @@ function displaySessions($individualSession){
 
 }
 
-// function listSessions(){
-  
-//   $sessionData = getSessions();
-//   $count = 1;
-//   $match;
-  
-
-//   foreach($sessionData as $individualSession){
-
-//     $sessionName = $individualSession['sessionName'];
-//     $exercisesData = getExercises();
-
-//     if ($match){
-//       echo "test";
-//     }
-
-//     foreach($exercisesData as $individualExerciseData){
-      
-//       if (strcmp($sessionName, $individualExerciseData['session']) == 0){
-//         return $match;
-//       }
-
-//     }
-
-//   }
-
-// }
-
 function displayAllExercises(){
 
   $allExercises = getExercises();
-
-    foreach($allExercises as $individualExercise){
-
-      $exerciseTypeName = getExerciseTypeName($individualExercise);
-
-      echo"
-      <form action='log_exercise.php' method='post'>
-        <input type='hidden' name='exerciseId' value=".$individualExercise['exerciseId']." />";
-        debugOutput($individualExercise['exerciseId']);
-       echo" <input type='submit' id='displayed_exercise_button' />
-
-          <label id='displayed_exercise_button_label' for='displayed_exercise_button'>
-            <div class='exercise_display_card'>
   
-              <div class='exercise_display_namebox'>
-                <h3 class='exercise_display_name'>".$individualExercise['exerciseName']."</h3>
-              </div>
-  
-              <div class='exercise_display_typebox'>
-                <h3 class='exercise_display_type'>".$exerciseTypeName."</h3>
-              </div>
-          </label>
+  foreach($allExercises as $individualExercise){
+    $exerciseTypeName = getExerciseTypeName($individualExercise);
 
+    echo"
+      <label for=".$individualExercise['exerciseId']." />
+        <form action='log_exercise.php' method='post'>
+          <input type='hidden' name='exerciseIdPass' value=".$individualExercise['exerciseId']." />
+          <input type='submit' class='displayed_exercise_submit_button' id=".$individualExercise['exerciseId']." value=''/>
+          <div class='exercise_display_card'>
+            <div class='exercise_display_namebox'>
+              <h3 class='exercise_display_name'>".$individualExercise['exerciseName']."</h3>
+            </div>
+            <div class='exercise_display_typebox'>
+              <h3 class='exercise_display_type'>".$exerciseTypeName."</h3>
+            </div>
           </div>
-      </form>";
-
-    }
-
+        </form>
+      </label>
+    ";
+  }
 }
 
 function logExerciseAttempt(){

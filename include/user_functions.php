@@ -65,10 +65,6 @@ function verifyPassword(){
     $password = $_REQUEST["password"];
     $hashedPass = $result['password'];
 
-
-    debugOutput($_REQUEST["password"]);
-    debugOutput($result['password']);
-
     if(password_verify($password, $hashedPass)){
 
       $user = db_Query("
@@ -79,9 +75,6 @@ function verifyPassword(){
     
       $_SESSION['userId'] = $user['userId'];
       header("location: index.php");
-      debugOutput($_SESSION['userId']);
-
-      // return $user['userId'];
 
     }
 
