@@ -87,21 +87,4 @@ function verifyPassword(){
     echo "User Not Found";
   }
 
-  // if(!$hashedPass){
-  //   echo "
-  //   <h3 class='error_message'>Invalid Information</h3>
-  //   ";
-  // }
-
-  // else{
-
-  //   if (password_verify('$password', '$hashedPass')){
-  //   return true;
-  // }
-  //   else {
-  //     echo "ogooog";
-  //     return false;
-  //   }
-  //}
-
 }

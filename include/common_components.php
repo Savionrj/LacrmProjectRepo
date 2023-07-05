@@ -1,6 +1,5 @@
 <?php
 
-
   function echoHeader($pageTitle)
   {
     echo "
@@ -14,10 +13,4 @@
       <body>
         
       ";
-  }
-
-  function echoFooter(){
-    echo "
-
-    ";
   }
