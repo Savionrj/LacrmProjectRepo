@@ -9,18 +9,17 @@ function addExercise(){
   $exerciseTarget = $_REQUEST["target"];
   $userId = $_SESSION['userId'];
 
-  debugOutput($_REQUEST);
-
   db_Query("
     INSERT INTO exercise(exerciseName, typeId, session, target, userId)
-    VALUES(:exerciseName, :typeId, :session, :target, $userId)
+    VALUES(:exerciseName, :typeId, :session, :target, :userId)
   ",
   
   [
     'exerciseName' => $exerciseName,
     'typeId' => $exerciseTypeId,
     'session' => $session,
-    'target' => $exerciseTarget
+    'target' => $exerciseTarget,
+    'userId' => $userId
   ]
 
   
@@ -69,7 +68,6 @@ function getExerciseTypeName($individualExercise){
 function displayExerciseTypeOptions(){
 
   $exerciseTypeData = getExerciseTypes();
-  $count = 1;
     
 
   foreach($exerciseTypeData as $individualExerciseType){
@@ -84,10 +82,9 @@ function displayExerciseTypeOptions(){
 
 }
 
+function getExercises($user){
 
-function getExercises(){
-
-  $userId = $_SESSION['userId'];
+  $userId = $user['userId'];
 
   $exerciseData = db_Query("
     SELECT *
@@ -122,9 +119,9 @@ function getSessions(){
 
 }
 
-function displayAllExercises(){
+function displayAllExercises($user){
 
-  $allExercises = getExercises();
+  $allExercises = getExercises($user);
   
   foreach($allExercises as $individualExercise){
     $exerciseTypeName = getExerciseTypeName($individualExercise);
@@ -148,30 +145,35 @@ function displayAllExercises(){
   }
 }
 
-function displayLogPage($exerciseData, $nextExerciseId){
+function displayLogPage($exerciseData){
 
   if($exerciseData['typeId'] == 1){
-    displayCardio($nextExerciseId);
+    displayCardio($exerciseData);
   }
 
   else if($exerciseData['typeId'] == 2){
-    displayWeights($nextExerciseId);
+    displayWeights($exerciseData);
   }
 
   else if($exerciseData['typeId'] == 3){
-    displayBodyweight($nextExerciseId);
+    displayBodyweight($exerciseData);
   }
 
 }
 
-function displayCardio(){
+function displayCardio($exerciseData){
+
+  if(isset($_REQUEST['log_exercise'])){
+    logWeightExerciseAttempt($exerciseData, $_REQUEST['minutes'], $_REQUEST['distance']);
+  }
+
   echo"
   <div id='current_attempt'>
     
       <h3 class='log_attempt_header'>Current Attempt</h3>
       <div id='log_exercise_form_layout'>
   
-        <form id='log_exercise_form'>
+        <form id='log_exercise_form' action='#' method='post'>
           <div id='log_exercise_two_box_form'>
     
             <div class='log_page_formrow'>
@@ -183,23 +185,12 @@ function displayCardio(){
               <h3 class='log_exercise_input_labels'>Distance:</h3>
               <input type='number' name='distance' class='log_exercise_formbox' />
             </div>
-      
           </div>
-  
-        <input type='submit' id='log_exercise_submit' name='log_exercise'/>
-  
+          <input type='submit' id='log_exercise_button' name='log_exercise' value='Log'/>
         </form>
-  
-        <div id='log_page_buttons'>
-  
-          <div id='log_exercise_button'>
-            <label id='log_exercise_button_label' for='log_exercise_submit' tabindex='0'>Log Exercise</label>
-          </div>
-  
-        </div>
       </div>
-
     </div>";
+
 $previousAttempt = getPreviousAttempt();
     if($previousAttempt){
 
@@ -211,12 +202,12 @@ $previousAttempt = getPreviousAttempt();
 
         <div id='outer_prev_box_two_inputs'>
           <div class='prev_display_input_box_for_two_inputs'>
-            <h3 class='prev_display_input_two'>Minute(s):1</h3>
+            <h3 class='prev_display_input'>Minute(s):1</h3>
           </div>
 
             <div id='inner_prev_box_two_inputs'>
               <div class='prev_display_input_box_for_two_inputs'>
-                <h3 class='prev_display_input_two'>Distance:1</h3>
+                <h3 class='prev_display_input'>Distance:1</h3>
               </div>
             
             </div>
@@ -237,44 +228,40 @@ $previousAttempt = getPreviousAttempt();
     </div>";
 }
 
-function displayWeights($exerciseIdPass){
+function displayWeights($exerciseData){
 
-  echo"
+    if(isset($_REQUEST['log_exercise'])){
+    logWeightExerciseAttempt($exerciseData,$_REQUEST['sets'], $_REQUEST['reps'], $_REQUEST['weight']);
+  }
+
+  echo "
   <div id='current_attempt'>
     
       <h3 class='log_attempt_header'>Current Attempt</h3>
       <div id='log_exercise_form_layout'>
   
-        <form id='log_exercise_form'>
-  
-        <div class='log_page_formrow'>
-          <h3 class='log_exercise_input_labels'>Set(s):</h3>
-          <input type='number' name='sets' class='log_exercise_formbox' />
-        </div>
-  
-        <div class='log_page_formrow'>
-          <h3 class='log_exercise_input_labels'>Rep(s):</h3>
-          <input type='number' name='reps' class='log_exercise_formbox' />
-        </div>
-  
-        <div class='log_page_formrow'>
-          <h3 class='log_exercise_input_labels'>Weight:</h3>
-          <input type='text' name='weight' class='log_exercise_formbox' />
-        </div>
-  
-        <input type='submit' id='log_exercise_submit' name='log_exercise'/>
-  
-        </form>
-  
-        <div id='log_page_buttons'>
-  
-          <div id='log_exercise_button'>
-            <label id='log_exercise_button_label' for='log_exercise_submit' tabindex='0'>Log Exercise</label>
-          </div>
-  
-        </div>
-      </div>
+        <form id='log_exercise_form' method='post'>
 
+          <div>
+    
+            <div class='log_page_formrow'>
+              <h3 class='log_exercise_input_labels'>Set(s):</h3>
+              <input type='number' name='sets' class='log_exercise_formbox' />
+            </div>
+    
+            <div class='log_page_formrow'>
+              <h3 class='log_exercise_input_labels'>Rep(s):</h3>
+              <input type='number' name='reps' class='log_exercise_formbox' />
+            </div>
+    
+            <div class='log_page_formrow'>
+              <h3 class='log_exercise_input_labels'>Weight:</h3>
+              <input type='text' name='weight' class='log_exercise_formbox' />
+            </div>
+          </div>
+          <input type='submit' id='log_exercise_button' name='log_exercise' value='Log'/>
+        </form>
+      </div>
     </div>";
 
     $previousAttempt = getPreviousAttempt();
@@ -319,7 +306,11 @@ function displayWeights($exerciseIdPass){
     </div>";
 }
 
-function displayBodyweight(){
+function displayBodyweight($exerciseData){
+
+  if(isset($_REQUEST['log_exercise'])){
+    logWeightExerciseAttempt($exerciseData, $_REQUEST['sets'], $_REQUEST['reps']);
+  }
 
   echo"
   <div id='current_attempt'>
@@ -327,34 +318,25 @@ function displayBodyweight(){
       <h3 class='log_attempt_header'>Current Attempt</h3>
       <div id='log_exercise_form_layout'>
   
-        <form id='log_exercise_form'>
-        <div id='log_exercise_two_box_form'>
+        <form id='log_exercise_form' action='#' method='post'>
+          <div id='log_exercise_two_box_form'>
     
-          <div class='log_page_formrow'>
-            <h3 class='log_exercise_input_labels'>Set:</h3>
-            <input type='number' name='sets' class='log_exercise_formbox' />
+            <div class='log_page_formrow'>
+              <h3 class='log_exercise_input_labels'>Set:</h3>
+              <input type='number' name='sets' class='log_exercise_formbox' />
+            </div>
+      
+            <div class='log_page_formrow'>
+              <h3 class='log_exercise_input_labels'>Rep(s):</h3>
+              <input type='number' name='log_reps_formbox' class='log_exercise_formbox' />
+            </div>
+    
           </div>
-    
-          <div class='log_page_formrow'>
-            <h3 class='log_exercise_input_labels'>Rep(s):</h3>
-            <input type='number' name='log_reps_formbox' class='log_exercise_formbox' />
-          </div>
-    
-        </div>
-        <input type='submit' id='log_exercise_submit' name='log_exercise'/>
-  
+          <input type='submit' id='log_exercise_button' name='log_exercise' value='Log'/>
         </form>
-  
-        <div id='log_page_buttons'>
-  
-          <div id='log_exercise_button'>
-            <label id='log_exercise_button_label' for='log_exercise_submit' tabindex='0'>Log Exercise</label>
-          </div>
-  
-        </div>
       </div>
-
-    </div>";
+    </div>
+  </div>";
 $previousAttempt = getPreviousAttempt();
     if($previousAttempt){
 
@@ -366,12 +348,12 @@ $previousAttempt = getPreviousAttempt();
 
         <div id='outer_prev_box_two_inputs'>
           <div class='prev_display_input_box_for_two_inputs'>
-            <h3 class='prev_display_input_two'>Set(s):1</h3>
+            <h3 class='prev_display_input'>Set(s):1</h3>
           </div>
 
             <div id='inner_prev_box_two_inputs'>
               <div class='prev_display_input_box_for_two_inputs'>
-                <h3 class='prev_display_input_two'>Rep(s):1</h3>
+                <h3 class='prev_display_input'>Rep(s):1</h3>
               </div>
             
             </div>
@@ -392,18 +374,18 @@ $previousAttempt = getPreviousAttempt();
     </div>";
 }
 
-function logWeightExerciseAttempt(){
+function logWeightExerciseAttempt($exerciseData){
 
   $sets = $_REQUEST['sets'];
   $reps = $_REQUEST['reps'];
   $weight = $_REQUEST['weight'];
 
   $userId = $_SESSION['userId'];
-  $exerciseId = $_SESSION['exerciseIdPass'];
+  $exerciseId = $exerciseData['exerciseId'];
   $typeId = $exerciseData['typeId'];
 
   db_Query("
-    INSERT INTO exercise_attempt (userId, weight, sets, reps, exerciseId, typeId)
+    INSERT INTO exercise_attempt(userId, weight, sets, reps, exerciseId, typeId)
     VALUES(:userId, :weight, :sets, :reps, :exerciseId, :typeId)
   ",
 
@@ -420,13 +402,13 @@ function logWeightExerciseAttempt(){
 
 }
 
-function logCardioExerciseAttempt(){
+function logCardioExerciseAttempt($exerciseData){
 
   $minutes = $_REQUEST['minutes'];
   $distance = $_REQUEST['distance'];
 
   $userId = $_SESSION['userId'];
-  $exerciseId = $exerciseIdPass;
+  $exerciseId = $exerciseData['exerciseId'];
   $typeId = $exerciseData['typeId'];
 
   db_Query("
@@ -437,7 +419,7 @@ function logCardioExerciseAttempt(){
   [
     'minutes' => $minutes,
     'distance' => $distance,
-    'exerciseId' => $exerciseIdPass,
+    'exerciseId' => $exerciseId,
     'typeId' => $typeId,
     'userId' => $userId
   ]
@@ -445,13 +427,13 @@ function logCardioExerciseAttempt(){
 
 }
 
-function logBodyweightExerciseAttempt(){
+function logBodyweightExerciseAttempt($exerciseData){
 
   $sets = $_REQUEST['sets'];
   $reps = $_REQUEST['reps'];
 
   $userId = $_SESSION['userId'];
-  $exerciseId = $exerciseIdPass;
+  $exerciseId = $exerciseData['exerciseId'];
   $typeId = $exerciseData['typeId'];
 
   db_Query("
@@ -462,7 +444,7 @@ function logBodyweightExerciseAttempt(){
   [
     'sets' => $sets,
     'reps' => $reps,
-    'exerciseId' => $exerciseIdPass,
+    'exerciseId' => $exerciseId,
     'typeId' => $typeId,
     'userId' => $userId
   ]
@@ -488,17 +470,3 @@ function getPreviousAttempt(){
 
 }
 
-function getNextExerciseId(){
-
-  $userId = $_SESSION['userId'];
-
-  $nextExerciseId = db_Query("
-    SELECT exerciseId
-    FROM exercise
-    WHERE userId = $userId
-    ORDER BY exerciseId
-    LIMIT 1
-  ")->fetch();
-
-  return $nextExerciseId;
-}

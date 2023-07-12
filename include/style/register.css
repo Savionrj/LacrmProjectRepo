@@ -1,0 +1,70 @@
+/* Registration page style */
+
+#registration_page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.registration_page_textbox {
+  background-color: white;
+  border: solid black 1px;
+  border-radius: 25px;
+  height: 54px;
+  width: 216px;
+  padding: 10px;
+}
+
+#registration_page_textbox_wrapper {
+  margin-bottom: 2em;
+}
+
+.registration_page_form_heads {
+  color: darkslategray;
+}
+
+.login_button {
+  background-color: #DDEED6;
+  border: none;
+  height: 54px;
+  width: 216px;
+  border-radius: 25px;
+  font-size: 36px;
+  color: darkslategray;
+}
+
+#registration_page {
+  background-color: #F0F8EC;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 844px;
+  width: 390px;
+}
+
+.registration_page_textbox {
+  background-color: white;
+  border: solid black 1px;
+  border-radius: 25px;
+  height: 54px;
+  width: 216px;
+  padding: 10px;
+}
+
+.registration_page_textbox:nth-of-type(5) {
+  margin-block-end: 2em;
+}
+
+.registration_page_form_heads {
+  color: darkslategray;
+  margin-block-end: .2em;
+}
+
+.choose_login {
+  margin-block-start: 0em;
+  margin-block-end: 0em;
+}

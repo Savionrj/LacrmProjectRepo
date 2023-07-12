@@ -3,9 +3,8 @@
 include_once('include/init.php');
 echoHeader('Log');
 
-$_SESSION['exerciseIdPass'] = $_REQUEST['exerciseIdPass'];
+$_SESSION['exerciseIdPass'] = $_REQUEST['exerciseIdPass'];;
 $exerciseData = getSingleExercise($_SESSION['exerciseIdPass']);
-$user = getUser($_SESSION['userId']);
 
 echo "
 
@@ -15,7 +14,7 @@ echo "
 
   <div id='log_exercise_body'>";
 
-    displayLogPage($exerciseData, $_SESSION['exerciseIdPass']);
+    displayLogPage($exerciseData);
 
 echo"
   </div>

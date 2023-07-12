@@ -4,9 +4,9 @@ function getUser(){
   $userId = $_SESSION['userId'];
 
   $user = db_Query("
-  SELECT *
-  FROM user
-  WHERE userId = $userId
+    SELECT *
+    FROM user
+    WHERE userId = $userId
   ")->fetch();
 
   return $user;
@@ -14,31 +14,37 @@ function getUser(){
 
 function register(){
 
-  $firstName = $_REQUEST["firstName"];
-  $lastName = $_REQUEST["lastName"];
-  $email = $_REQUEST["email"];
-  $username = $_REQUEST["username"];
-  $password = $_REQUEST["password"];
+  $duplicateFound = checkForDuplicate();
 
-  debugOutput($password);
+  if(!$duplicateFound){
 
-  $hash = password_hash($password, PASSWORD_DEFAULT);
+    $firstName = $_REQUEST["firstName"];
+    $lastName = $_REQUEST["lastName"];
+    $email = $_REQUEST["email"];
+    $username = $_REQUEST["username"];
+    $password = $_REQUEST["password"];
 
-  db_Query("
-    INSERT INTO user(firstName, lastName, email, username, password)
-    VALUES(:firstName, :lastName, :email, :username, :password)
+    $hash = password_hash($password, PASSWORD_DEFAULT);
+
+    db_Query("
+      INSERT INTO user(firstName, lastName, email, username, password)
+      VALUES(:firstName, :lastName, :email, :username, :password)
     ",
+      [
+        'firstName' => $firstName,
+        'lastName' => $lastName,
+        'email' => $email,
+        'username' => $username,
+        'password' => $hash
+      ]
+    );
 
-    [
-      'firstName' => $firstName,
-      'lastName' => $lastName,
-      'email' => $email,
-      'username' => $username,
-      'password' => $hash
-    ]
-  );
+    header("location: login.php");
+  }
 
-verifyPassword();
+  else{
+    echo "Username already exists";
+  }
 
 
 }
@@ -51,14 +57,28 @@ function validateField($name){
   }
 }
 
+function checkForDuplicate(){
+
+  $username = $_REQUEST["username"];
+
+  $duplicateFound = db_Query("
+    SELECT username
+    FROM user
+    WHERE username='$username'
+  ")->fetch();
+
+  return $duplicateFound;
+
+}
+
 function verifyPassword(){
 
   $username = $_REQUEST["username"];
 
   $result = db_Query("
-  SELECT password
-  FROM user
-  WHERE username='$username'
+    SELECT password, userId
+    FROM user
+    WHERE username='$username'
   ")->fetch();
 
   if($result){
@@ -66,14 +86,8 @@ function verifyPassword(){
     $hashedPass = $result['password'];
 
     if(password_verify($password, $hashedPass)){
-
-      $user = db_Query("
-        SELECT userId
-        FROM user
-        WHERE username='$username' AND password='$hashedPass'
-      ")->fetch();
     
-      $_SESSION['userId'] = $user['userId'];
+      $_SESSION['userId'] = $result['userId'];
       header("location: index.php");
 
     }

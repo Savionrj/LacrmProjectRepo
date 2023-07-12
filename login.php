@@ -11,21 +11,7 @@ $errors = array();
 
 if(isset($_REQUEST['login'])){
 
-  validateField('username');
-  validateField('password');
-  
-  if(sizeof($errors) == 0){
-
-    verifyPassword();
-    
-  }
-
-  if(sizeof($errors) > 0){
-    
-    echo "
-        <h3 class='error_message'>All fields must be completed</h3>
-    ";
-  }
+  verifyPassword();
 
 }
 
@@ -34,12 +20,12 @@ echo"
     <form action='#' method='post'>
     
       <h3 class='login_page_form_heads'>Username</h3>
-          <input type='text' name='username' class='login_page_textbox' /> <br/> <br/>
+          <input type='text' name='username' class='login_page_textbox' required /> <br/> <br/>
 
           <h3 class='login_page_form_heads'>Password</h3>
-          <input type='password' name='password' class='login_page_textbox' /> <br/> <br/>
+          <input type='password' name='password' class='login_page_textbox' required /> <br/> <br/>
 
-          <input type='submit' name='login' value='Login' id='login_button' />
+          <input type='submit' name='login' value='Login' class='login_button' />
 
     </form>
 
