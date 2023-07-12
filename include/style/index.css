@@ -1,0 +1,200 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: gray;
+}
+
+#default_page {
+  height: 844px;
+  width: 390px;
+  background-color: #F0F8EC;
+}
+
+/* Index Page style */
+
+#home_page {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+#home_header {
+  width: 390px;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+#profile_button {
+  border-radius: 100px;
+  background-color: #E6F4E0;
+  height: 58px;
+  width: 58px;
+  margin-left: 14px;
+}
+
+#home_greeting {
+  color: #535353;
+  font-size: 36px;
+  margin-left: 23px;
+
+}
+
+#session_display {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 648px;
+}
+
+.session_card {
+  display: flex;
+  height: 151px;
+  width: 304px;
+  border-radius: 25px;
+  background-color: #F0F8EC;
+  justify-content: end;
+}
+
+.session_name_on_card_div {
+  display: flex;
+  justify-content: space-around;
+  color: #535353;
+  width: 177px;
+}
+
+.session_name_on_card {
+  font-weight: normal;
+  font-size: 36px;
+  margin-top: 32px;
+}
+
+.exercise_count {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 151px;
+  width: 127px;
+  border-radius: 25px;
+  background-color: #DDEED6;
+}
+
+.exercise_count_number {
+  font-size: 36px;
+  text-align: center;
+  color: #535353;
+  font-weight: normal;
+}
+
+.exercise_count_label {
+  font-size: 20px;
+  text-align: center;
+}
+
+#home_menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #E6F4E0;
+  border-top-left-radius: 55px;
+  border-top-right-radius: 55px;
+  height: 97px;
+  width: 390px;
+}
+
+#home_menu_new_exercise_button {
+  height: 55px;
+  width: 55px;
+  background-color: #E6F4E0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px;
+  margin-left: 40px;
+  text-decoration: none;
+}
+
+#home_menu_start_exercise_button {
+  height: 55px;
+  width: 85px;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px;
+  text-decoration: none;
+  color: black;
+}
+
+#start_exercises_link{
+  text-decoration: none;
+  color: black;
+}
+
+#all_exercises_page {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  height: 844px;
+  width: 390px;
+}
+
+#exercises_list {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  height: 844px;
+  overflow-y: scroll;
+}
+
+.exercise_display_card {
+  display: flex;
+  background-color: #CFE7C5;
+  border-radius: 35px;
+  height: 106px;
+  width: 336px;
+  margin-bottom: 22px;
+}
+
+.exercise_display_namebox {
+  display: flex;
+  background-color: #E6f4e0;
+  border-radius: 35px;
+  height: 106px;
+  width: 120px;
+  justify-content: center;
+  align-items: center;
+}
+
+.exercise_display_name {
+  text-align: center;
+  font-size: 20px;
+  font-weight: normal;
+}
+
+.exercise_display_typebox {
+  display: flex;
+  height: 106px;
+  width: 213px;
+  justify-content: center;
+  align-items: start;
+}
+
+.exercise_display_type {
+  text-align: center;
+  font-size: 20px;
+  font-weight: normal;
+}
+
+.displayed_exercise_submit_button {
+  visibility: hidden;
+}

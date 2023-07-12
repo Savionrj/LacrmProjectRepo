@@ -1,0 +1,195 @@
+/* Log Exercise page */
+
+#log_exercise_page {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.log_attempt_header {
+  font-size: 36px;
+  font-style: italic;
+  color: #535353;
+  font-weight: normal;
+  margin-left: 24px;
+}
+
+#previous_attempt {
+  margin-top: 181px;
+}
+
+#outer_prev_box {
+  height: 132px;
+  width: 390px;
+  background-color: #F3FAF0;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  border-radius: 25px;
+  border: solid 1px black;
+
+}
+
+#middle_prev_box {
+  height: 132px;
+  width: 254px;
+  background-color: #EAF6E5;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  border-radius: 25px;
+  border: solid 1px black;
+  border-right: none;
+}
+
+#inner_prev_box {
+  height: 132px;
+  width: 124px;
+  background-color: #DBEFD2;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  border-radius: 25px;
+  border: solid 1px black;
+  border-right: none;
+}
+
+#outer_prev_box_two_inputs {
+  height: 132px;
+  width: 390px;
+  background-color: #F3FAF0;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  border-radius: 25px;
+  border: solid 1px black;
+
+}
+
+#inner_prev_box_two_inputs {
+  height: 132px;
+  width: 200px;
+  background-color: #DBEFD2;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  border-radius: 25px;
+  border: solid 1px black;
+  border-right: none;
+}
+
+.prev_display_input_box {
+  height: 50px;
+  width: 50px;
+  display: flex;
+  flex-direction: column;
+  margin-right: 45px;
+}
+
+.prev_display_input_box_for_two_inputs {
+  height: 50px;
+  width: 50px;
+  display: flex;
+  flex-direction: column;
+  margin-right: 75px;
+}
+
+.prev_display_input {
+  font-weight: normal;
+  text-align: center;
+}
+
+#no_prev_attempt_message {
+  margin-top: 181px;
+  color: orange;
+  text-align: center;
+  font-size: 50px;
+}
+
+#log_exercise_body {
+  width: 390px;
+}
+
+#log_exercise_form{
+  display: flex;
+}
+
+#log_exercise_form_layout {
+  display: flex;
+  align-items: start;
+}
+
+.log_exercise_input_labels {
+  font-size: 32px;
+  font-weight: normal;
+  margin-block-start: 0em;
+  margin-block-end: 0em;
+  text-align: end;
+  width: 120px;
+}
+
+#log_exercise_two_box_form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 196px;
+}
+
+.log_page_formrow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 202px;
+  margin-bottom: 15px;
+}
+
+.log_exercise_formbox {
+  display: flex;
+  border-radius: 5px;
+  background-color: white;
+  height: 54px;
+  width: 58px;
+  border: 1px solid black;
+  text-align: center;
+}
+
+#log_exercise_submit {
+  visibility: hidden;
+}
+
+#log_exercise_button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #cfe7c5;
+  border-radius: 25px;
+  width: 142px;
+  margin-left: 24px;
+  height: 192px;
+  font-size: 32px;
+  font-weight: normal;
+  text-align: center;
+  border: none;
+}
+
+#next_exercise_button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #C5DBE7;
+  border-radius: 25px;
+  height: 116px;
+  width: 142px;
+  margin-left: 24px;
+  text-decoration: none;
+  color: black;
+}
+
+#next_exercise_button_label {
+  font-size: 32px;
+  font-weight: normal;
+  text-align: center;
+}
