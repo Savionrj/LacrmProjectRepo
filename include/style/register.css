@@ -55,10 +55,6 @@
   padding: 10px;
 }
 
-.registration_page_textbox:nth-of-type(5) {
-  margin-block-end: 2em;
-}
-
 .registration_page_form_heads {
   color: darkslategray;
   margin-block-end: .2em;

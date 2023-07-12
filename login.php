@@ -18,14 +18,14 @@ if(isset($_REQUEST['login'])){
 echo"
 
     <form action='#' method='post'>
-    
-      <h3 class='login_page_form_heads'>Username</h3>
-          <input type='text' name='username' class='login_page_textbox' required /> <br/> <br/>
+      <div id='login_page_textbox_wrapper'>
+        <h3 class='login_page_form_heads'>Username</h3>
+            <input type='text' name='username' class='login_page_textbox' required /> <br/> <br/>
+        <h3 class='login_page_form_heads'>Password</h3>
+        <input type='password' name='password' class='login_page_textbox' required /> <br/> <br/>
+      </div>
 
-          <h3 class='login_page_form_heads'>Password</h3>
-          <input type='password' name='password' class='login_page_textbox' required /> <br/> <br/>
-
-          <input type='submit' name='login' value='Login' class='login_button' />
+      <input type='submit' name='login' value='Login' class='login_button' />
 
     </form>
 
