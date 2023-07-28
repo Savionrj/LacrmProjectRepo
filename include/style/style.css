@@ -25,9 +25,10 @@ body {
 }
 
 .app_direction_text{
-  font-size: 1.4em;
+  font-size: 1.6em;
   color: #ADBBD6;
   text-align: center;
+  text-shadow: white 1px 0 1px;
   font-family: 'Times New Roman', Times, serif;
 }
 
@@ -56,6 +57,21 @@ body {
 #start_session_link{
   align-self: flex-end;
 }
+
+
+
+.select_card{
+  background-color: #4F6287;
+  height: 100px;
+  width: 85%;
+  border-radius: 10px;
+  border: none;
+  margin: 10%
+}
+
+
+
+
 
 .form_heading {
   font-size: 1.2em;
@@ -118,4 +134,5 @@ form {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
 }
