@@ -1,0 +1,106 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: gray;
+}
+
+#default_page {
+  height: 844px;
+  width: 390px;
+  background-color: #2D3D5B;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 30px;
+}
+
+#title_text{
+  font-size: 3.5em;
+  color:white;
+  text-align: center;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.app_direction_text{
+  font-size: 1.4em;
+  color: #ADBBD6;
+  text-align: center;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+#index_center_interactivity{
+  display: flex;
+  flex-direction: row;
+  height: 20%;
+}
+
+#start_session_button{
+  border-radius: 100px;
+  background-color: #A3F8AB;
+  height: 68px;
+  width: 68px;
+}
+
+.form_heading {
+  font-size: 1.2em;
+  color: white;
+  text-align: center;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.small_text {
+  font-size: 1em;
+  color: white;
+  text-align: center;
+  font-family: 'Times New Roman', Times, serif;
+  text-decoration: none;
+}
+
+.large_button {
+  font-size: 1.4em;
+  color: white;
+  text-align: center;
+  font-family: 'Times New Roman', Times, serif;
+  background-color: #4F6287;
+  border: solid 1px #A3F8AB;
+  height: 60px;
+  width: 200px;
+  border-radius: 10px;
+}
+
+.standard_form_box {
+  background-color: #ADBBD6;
+  border: solid 1px #A3F8AB;
+  border-radius: 10px;
+  padding: .5em;
+  height: 50px;
+  width: 250px;
+  margin: 0px;
+}
+
+.form_box_wrapper {
+  margin-top: 2.5em;
+  margin-bottom: 2em;
+}
+
+.error_message {
+  align-self: center;
+  justify-self: center;
+  color: red;
+}
+
+.switch_page_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  color: white;
+}
+
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
