@@ -127,45 +127,15 @@ function displayAllExercisesInRoutine($userId, $routineId)
 
     echo "
       <form method='post'>
-        <div class='two_part_container'>
-          <div class='header_text_container'>
-            <h3 class='header_text'>" . $exerciseData['exerciseName'] . "</h3>
-            <div class='two_button_container'>
-              <button type='submit' name='add_set' class='light_button' value=" . $exerciseId . ">
-                <p class='minor_text'>Add Set</p>
-              </button>
-              <div class='dark_button'>
-                <p class='minor_text_dark'>Remove</p>
-              </div>
-            </div>
+        <div class='select_card'>
+          <h3 class='header_text'>" . $exerciseData['exerciseName'] . "</h3>
+          <div class='card_options_row'>
+            <button type='submit' name='add_set' class='form_button'></button>
+            <h3 class='header_text'></div>
+            <button type='submit' name='remove_exercise' class='form_button'></button>
           </div>
-        </form>";
-    if ($exerciseData['workoutTypeId'] == 1) {
-      if (isset($_REQUEST['add_set'])) {
-        $count++;
-
-        echo "
-          <div class='header_text_container_dropdown'>
-            <form method='post' class='form_row'>
-              <div class='standard_text'>" . $count . "</div>
-              <input type='number' name='minutes' class='form_box_set' />
-              <input type='number' name='distance' class='form_box_set' />
-            </form>
-          </div>
-        ";
-      }
-    } elseif ($exerciseData['workoutTypeId'] == 2) {
-      if (isset($_REQUEST['$add_set'])) {
-        echo "
-          <div class='header_text_container_dropdown'>
-            <form method='post' class='form_row'>
-              <input type='number' name='reps' />
-              <input type='number' name='weight' />
-            </form>
-          </div>
-        ";
-      }
-    }
+        </div>
+      </form>";
   }
 }
 

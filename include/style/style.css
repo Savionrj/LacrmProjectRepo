@@ -71,6 +71,19 @@ body {
 
 
 
+.card_options_row{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.form_button{
+  height: 35px;
+  width: 55px;
+}
+
+
 
 
 .form_heading {
@@ -135,4 +148,8 @@ form {
   flex-direction: column;
   align-items: center;
   width: 100%;
+}
+
+button{
+  border: none;
 }
