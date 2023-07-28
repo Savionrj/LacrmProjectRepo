@@ -20,6 +20,8 @@ body {
   color:white;
   text-align: center;
   font-family: 'Times New Roman', Times, serif;
+  margin-top: 25%;
+  margin-bottom: 25%;
 }
 
 .app_direction_text{
@@ -29,10 +31,19 @@ body {
   font-family: 'Times New Roman', Times, serif;
 }
 
+.header_text{
+  font-size: 2em;
+  color: white;
+  text-align: center;
+  font-family: 'Times New Roman', Times, serif;
+}
+
 #index_center_interactivity{
   display: flex;
   flex-direction: row;
   height: 20%;
+  align-items: center;
+  margin-bottom: 5%;
 }
 
 #start_session_button{
@@ -40,6 +51,10 @@ body {
   background-color: #A3F8AB;
   height: 68px;
   width: 68px;
+}
+
+#start_session_link{
+  align-self: flex-end;
 }
 
 .form_heading {
