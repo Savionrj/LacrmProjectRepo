@@ -23,3 +23,15 @@ displayAllExercisesInRoutine($userId, $routineId);
 //     <h3 class='header_text'>Add Exercise</h3>
 //   </a>
 // ";
+
+
+
+
+        // <div class='select_card'>
+        //   <h3 class='header_text'>" . $exerciseData['exerciseName'] . "</h3>
+        //   <div class='card_options_row'>
+        //     <button type='submit' name='add_set' class='form_button'></button>
+        //     <h3 class='header_text'></div>
+        //     <button type='submit' name='remove_exercise' class='form_button'></button>
+        //   </div>
+        // </div>

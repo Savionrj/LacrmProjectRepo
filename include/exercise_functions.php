@@ -127,13 +127,49 @@ function displayAllExercisesInRoutine($userId, $routineId)
 
     echo "
       <form method='post'>
-        <div class='select_card'>
+        <div class='select_card' id=>
           <h3 class='header_text'>" . $exerciseData['exerciseName'] . "</h3>
           <div class='card_options_row'>
-            <button type='submit' name='add_set' class='form_button'></button>
-            <h3 class='header_text'></div>
-            <button type='submit' name='remove_exercise' class='form_button'></button>
-          </div>
+            <button type='submit' name='add_set' class='form_button' value=" . $exerciseId . "></button>
+            <button type='submit' name='remove_exercise' class='form_button' value=" . $exerciseId . "></button>
+          </div>";
+            if(isset($_REQUEST['add_set'])){
+              if($exerciseData['workoutTypeId'] == 1){
+                  $count++;
+
+                  echo "
+                    <div class='log_input_container'>
+                      <form method='post'>
+                        <div class='log_input_wrapper'>
+                          <h3 class='app_direction_text'>Time</h3>
+                          <div class='form_input_button'></div>
+                        </div>
+                        <div class='log_input_wrapper'>
+                          <h3 class='app_direction_text'>Distance</h3>
+                          <div class='form_input_button'></div>
+                        </div>
+                      </form>
+                    </div>
+                  ";
+                }
+              else {
+                  echo "
+                    <div class='log_input_container'>
+                      <form method='post'>
+                        <div class='log_input_wrapper'>
+                          <h3 class='app_direction_text'>Reps</h3>
+                          <div class='form_input_button'></div>
+                        </div>
+                        <div class='log_input_wrapper'>
+                          <h3 class='app_direction_text'>Weight</h3>
+                          <div class='form_input_button'></div>
+                        </div>
+                      </form>
+                    </div>
+                  ";
+                }
+            }
+      echo"
         </div>
       </form>";
   }
@@ -255,3 +291,5 @@ function displayCardioLog($sessionExercise)
   ";
   }
 }
+
+
