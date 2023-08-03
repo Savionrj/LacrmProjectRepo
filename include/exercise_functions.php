@@ -14,6 +14,18 @@ function getSessions($userId)
   return $sessionData;
 }
 
+function getCurrentSession($userId){
+  $currentSession = db_Query("
+    SELECT *
+    FROM session
+    WHERE userId = '$userId'
+    ORDER BY sessionId
+    DESC
+  ")->fetch();
+
+  return $currentSession;
+}
+
 function displayAllSessions($userId)
 {
 
@@ -146,25 +158,25 @@ function displayAllExercisesInRoutine($userId, $routineId)
       <div class='select_card' id=>
         <h3 class='header_text'>" . $exerciseData['exerciseName'] . "</h3>
         <div class='card_options_row'>
-          <button type='submit' class='standard_button' id='log_button_id_" . $count . "' style='display:none;' onclick='submitForm(" . $count . ")'>
+          <button class='standard_button' id='log_button_id_" . $count . "' style='display:none;' onclick='submitForm(" . $count . ")'>
             <svg width='50' height='50' fill='none' viewBox='0 0 24 24'>
               <path stroke='#A3F8AB' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M5.75 12.8665L8.33995 16.4138C9.15171 17.5256 10.8179 17.504 11.6006 16.3715L18.25 6.75'/>
             </svg>
           </button>
           <button class='standard_button' id='form_button_id_".$count."' onclick='showForm(".$count. "); switchToConfirmButton(".$count. ")' >
             <svg width='50' height='50' fill='none' viewBox='0 0 24 24'>
-              <path stroke='#A3F8AB' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M12 5.75V18.25'/>
-              <path stroke='#A3F8AB' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M18.25 12L5.75 12'/>
+              <path stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M12 5.75V18.25'/>
+              <path stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M18.25 12L5.75 12'/>
             </svg>
           </button>
-          <button class='standard_button' id='trash_button_id_" . $count . "' onclick='cancelLogging(" . $exerciseId . ")' >
+          <button style='border-color:red' class='standard_button' id='trash_button_id_" . $count . "' onclick='cancelLogging(" . $exerciseId . ")' >
             <svg width='50' height='50' fill='none' viewBox='0 0 24 24'>
-              <path stroke='red' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6.75 7.75L7.59115 17.4233C7.68102 18.4568 8.54622 19.25 9.58363 19.25H14.4164C15.4538 19.25 16.319 18.4568 16.4088 17.4233L17.25 7.75'/>
-              <path stroke='red' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M9.75 7.5V6.75C9.75 5.64543 10.6454 4.75 11.75 4.75H12.25C13.3546 4.75 14.25 5.64543 14.25 6.75V7.5'/>
-              <path stroke='red' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M5 7.75H19'/>
+              <path stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6.75 7.75L7.59115 17.4233C7.68102 18.4568 8.54622 19.25 9.58363 19.25H14.4164C15.4538 19.25 16.319 18.4568 16.4088 17.4233L17.25 7.75'/>
+              <path stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M9.75 7.5V6.75C9.75 5.64543 10.6454 4.75 11.75 4.75H12.25C13.3546 4.75 14.25 5.64543 14.25 6.75V7.5'/>
+              <path stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M5 7.75H19'/>
             </svg>
           </button>
-          <button class='standard_button' id='cancel_button_id_".$count."' style='display:none'  onclick='hideForm(".$count. ")' >
+          <button class='standard_button' id='cancel_button_id_".$count."' style='display:none; border-color:red;'  onclick='hideForm(".$count. ")' >
             <svg width='50' height='50' fill='none' viewBox='0 0 24 24'>
               <path stroke='red' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M17.25 6.75L6.75 17.25'/>
               <path stroke='red' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6.75 6.75L17.25 17.25'/>
@@ -189,14 +201,14 @@ function displayAllExercisesInRoutine($userId, $routineId)
         } 
         else {
           echo "
-            <form method='post' id='log_set_form_".$count. "' class='log_set_form' style='display:none;'>
+            <form name='log_form' method='post' id='log_set_form_".$count. "' class='log_set_form' style='display:none;' >
               <div class='log_input_wrapper'>
                 <h3 class='app_direction_text'>Reps</h3>
-                <input type='number' class='form_input' />
+                <input name='reps' type='number' min='1' class='form_input' />
               </div>
               <div class='log_input_wrapper'>
                 <h3 class='app_direction_text'>Weight</h3>
-                <input type='number' class='form_input' />
+                <input name='weight' type='number' min='0' class='form_input' />
               </div>
             </form>
           </div>
@@ -220,6 +232,11 @@ function displayAllExercisesInRoutine($userId, $routineId)
               document.getElementById('log_button_id_'+confirm_button_number).style.display = 'flex';
               document.getElementById('trash_button_id_'+confirm_button_number).style.display = 'none';
               document.getElementById('cancel_button_id_'+confirm_button_number).style.display = 'flex';
+            }
+            function submitForm(submit_form_number){
+              var reps = document.log_form.reps
+              
+              document.getElementById('log_set_form'+submit_form_number).submit();
             }
           </script>
         ";
@@ -254,18 +271,29 @@ function displayAllExercises_fromAddExercise($userId)
   }
 }
 
-function logSessionExercise($sessionId, $exerciseId)
+function logSessionExercise($session, $routineId, $userId)
 {
-  db_Query(
-    "
-    INSERT INTO session_exercise(sessionId, exerciseId)
-    VALUES(:sessionId, :exerciseId)
-  ",
-    [
-      'sessionId' => $sessionId,
-      'exerciseId' => $exerciseId,
-    ]
-  );
+  $sessionId = $session['sessionId'];
+  $routineData = getSingleRoutine($userId, $routineId);
+  if($routineData['routineId'] == 1){
+
+  }
+  else{
+    $exercisesFromRoutine = getAllExercisesInRoutine($userId, $routineId);
+    foreach($exercisesFromRoutine as $individualExerciseFromRoutine){
+      $exerciseId = $individualExerciseFromRoutine['exerciseId'];
+      db_Query("
+        INSERT INTO session_exercise(sessionId, exerciseId, userId)
+        VALUES(:sessionId, :exerciseId, :userId)
+      ",
+        [
+          'sessionId' => $sessionId,
+          'exerciseId' => $exerciseId,
+          'userId' => $userId
+        ]
+        );
+    }
+  }
 }
 
 /* Set Functions */
