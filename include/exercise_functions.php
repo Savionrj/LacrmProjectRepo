@@ -77,6 +77,16 @@ function getExercisesInSession($sessionId){
   return $exercisesInSession;
 }
 
+function getSessionExerciseId($sessionId, $exerciseId){
+  $sessionExerciseId = db_Query("
+    SELECT sessionExerciseId
+    FROM session_exercise
+    WHERE sessionId = $sessionId AND exerciseId = $exerciseId
+  ")->fetch();
+
+  return $sessionExerciseId;
+}
+
 /* Routine Functions */
 
 function getRoutines($userId)
@@ -158,11 +168,11 @@ function displayAllExercisesInRoutine($userId, $routineId)
       <div class='select_card' id=>
         <h3 class='header_text'>" . $exerciseData['exerciseName'] . "</h3>
         <div class='card_options_row'>
-          <label for='' class='standard_button' id='log_button_id_" . $count . "' style='display:none;' onclick='submitForm(" . $count . ")'>
+          <button class='standard_button' id='log_button_id_" . $count . "' style='display:none;' onclick='submitForm(" . $count . ")'>
             <svg width='50' height='50' fill='none' viewBox='0 0 24 24'>
               <path stroke='#A3F8AB' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M5.75 12.8665L8.33995 16.4138C9.15171 17.5256 10.8179 17.504 11.6006 16.3715L18.25 6.75'/>
             </svg>
-          </label>
+          </button>
           <button class='standard_button' id='form_button_id_".$count."' onclick='showForm(".$count. "); switchToConfirmButton(".$count. ")' >
             <svg width='50' height='50' fill='none' viewBox='0 0 24 24'>
               <path stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M12 5.75V18.25'/>
@@ -315,10 +325,17 @@ function logCardioSet($workoutTypeId)
 
 
 function logWeightSet($workoutTypeId){
+
   db_Query("
-    INSERT INTO set
-    VALUES(:weight, :reps)
-  ");
+    INSERT INTO set(weight, reps)
+    VALUES(:weight, :reps, sessionExerciseId)
+  ",
+    [
+      'weight' => $weight,
+      'reps' => $reps,
+      'sessionExerciseId' => $sessionExerciseId
+    ]
+  );
 }
 
 /* Log Functions */
