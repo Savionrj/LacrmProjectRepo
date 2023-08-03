@@ -5,8 +5,6 @@
     DEFINE('DB_USERNAME', 'root');
     DEFINE('DB_PASSWORD', 'root');
 
-
-
 if(GETENV("MOVEMINDER_IS_HEROKU")){
   $DbUrl = parse_url(getenv("CLEARDB_DATABASE_URL"));
   $DbServer = $DbUrl["host"];
@@ -33,5 +31,14 @@ else{
   );
   $pdo = new PDO($dsn, DB_USERNAME, DB_PASSWORD, $opt);
 
+}
+
+function db_Query($query, $values = array())
+{
+  global $pdo;
+
+  $stmt = $pdo->prepare($query);
+  $stmt->execute($values);
+  return $stmt;
 }
 
