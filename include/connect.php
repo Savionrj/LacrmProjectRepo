@@ -5,7 +5,9 @@
     DEFINE('DB_USERNAME', 'root');
     DEFINE('DB_PASSWORD', 'root');
 
-if(GETENV("MOVEMINDER_IS_HEROKU")){
+    error_log('In Connect.php');
+
+if(getenv("MOVEMINDER_IS_HEROKU")){
   error_log('Heroku Connected');
   $DbUrl = parse_url(getenv("CLEARDB_DATABASE_URL"));
   $DbServer = $DbUrl["host"];
