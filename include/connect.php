@@ -6,6 +6,7 @@
     DEFINE('DB_PASSWORD', 'root');
 
 if(GETENV("MOVEMINDER_IS_HEROKU")){
+  error_log('Heroku Connected');
   $DbUrl = parse_url(getenv("CLEARDB_DATABASE_URL"));
   $DbServer = $DbUrl["host"];
   $DbUser = $DbUrl["user"];
@@ -23,6 +24,7 @@ if(GETENV("MOVEMINDER_IS_HEROKU")){
 
 }
 else{
+  error_log('Local Connected');
   $dsn = "mysql:host=" . DB_HOSTNAME . ";dbname=" . DB_DATABASE . ";charset=utf8";
   $opt = array(
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
