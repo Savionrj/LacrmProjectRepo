@@ -1,11 +1,13 @@
 <?php
 // For Local
-    DEFINE('DB_HOSTNAME', 'localhost');
-    DEFINE('DB_DATABASE', 'summer_main');
-    DEFINE('DB_USERNAME', 'root');
-    DEFINE('DB_PASSWORD', 'root');
+DEFINE('DB_HOSTNAME', 'localhost');
+DEFINE('DB_DATABASE', 'summer_main');
+DEFINE('DB_USERNAME', 'root');
+DEFINE('DB_PASSWORD', 'root');
 
-if(GETENV("MOVEMINDER_IS_HEROKU")){
+error_log('In Connect.php');
+
+if (getenv("MOVEMINDER_IS_HEROKU")) {
   error_log('Heroku Connected');
   $DbUrl = parse_url(getenv("CLEARDB_DATABASE_URL"));
   $DbServer = $DbUrl["host"];
@@ -20,10 +22,9 @@ if(GETENV("MOVEMINDER_IS_HEROKU")){
   );
   $pdo = new PDO($dsn, $DbUser, $DbPassword, $opt);   //here is where php is connectng to the DB
 
-// You'll want to leave the rest of the file the same below here.
+  // You'll want to leave the rest of the file the same below here.
 
-}
-else{
+} else {
   error_log('Local Connected');
   $dsn = "mysql:host=" . DB_HOSTNAME . ";dbname=" . DB_DATABASE . ";charset=utf8";
   $opt = array(
@@ -32,7 +33,6 @@ else{
     PDO::ATTR_EMULATE_PREPARES   => false,
   );
   $pdo = new PDO($dsn, DB_USERNAME, DB_PASSWORD, $opt);
-
 }
 
 function db_Query($query, $values = array())
@@ -40,7 +40,12 @@ function db_Query($query, $values = array())
   global $pdo;
 
   $stmt = $pdo->prepare($query);
+  if (!$stmt) {
+    $ErrorInfo = $pdo->errorInfo();
+    echo "\nPDO::errorInfo():\n";
+    echo json_encode($ErrorInfo);
+    error_log('PDO ERROR: ' . json_encode($ErrorInfo));
+  }
   $stmt->execute($values);
   return $stmt;
 }
-
