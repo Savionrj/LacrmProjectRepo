@@ -3,24 +3,16 @@ body {
   justify-content: center;
   align-items: center;
   background-color: gray;
-}
-
-#default_page {
-  height: 844px;
-  width: 390px;
   background-color: #2D3D5B;
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-radius: 30px;
 }
 
-body::-webkit-scrollbar{
-  display: none;
-}
+/* Text CSS */
 
 #title_text {
-  font-size: 3.5em;
+  font-size: 8em;
   color: white;
   text-align: center;
   font-family: 'Times New Roman', Times, serif;
@@ -29,7 +21,7 @@ body::-webkit-scrollbar{
 }
 
 .app_direction_text {
-  font-size: 1.6em;
+  font-size: 4em;
   color: #ADBBD6;
   text-align: center;
   text-shadow: white 1px 0 1px;
@@ -37,49 +29,37 @@ body::-webkit-scrollbar{
 }
 
 .header_text {
-  font-size: 2em;
+  font-size: 5em;
   color: white;
   text-align: center;
   font-family: 'Times New Roman', Times, serif;
 }
 
-#index_center_interactivity {
-  display: flex;
-  flex-direction: row;
-  height: 20%;
-  align-items: center;
-  margin-bottom: 5%;
+.small_text {
+  font-size: 2.5em;
+  color: white;
+  text-align: center;
+  font-family: 'Times New Roman', Times, serif;
+  text-decoration: none;
 }
 
-#start_session_button {
-  border-radius: 100px;
-  background-color: #A3F8AB;
-  height: 68px;
-  width: 68px;
+.form_heading {
+  font-size: 4em;
+  color: white;
+  text-align: center;
+  font-family: 'Times New Roman', Times, serif;
 }
 
-#start_session_link {
-  align-self: flex-end;
-}
+/* Form Elements */
 
-
-
-.select_card {
-  background-color: #4F6287;
-  width: 85%;
+.standard_form_box {
+  background-color: #ADBBD6;
+  border: solid 1px #A3F8AB;
   border-radius: 10px;
-  border: none;
-  margin: 10%;
-  padding-bottom: 1em;
-}
-
-
-
-.card_options_row {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  width: 100%;
+  padding: .5em;
+  height: 100px;
+  width: 80%;
+  font-size: 3em;
 }
 
 .form_button {
@@ -90,8 +70,32 @@ body::-webkit-scrollbar{
   border-radius: 10px;
 }
 
-.log_input_container {
-  margin: 1em 1em 0em 1em;
+.form_input {
+  display: flex;
+  text-align: center;
+  height: 50px;
+  width: 70px;
+  border: solid 1px #A3F8AB;
+  background-color: #ADBBD6;
+  border-radius: 10px;
+  font-size: 3em;
+}
+
+.form_box_wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2.5em;
+  margin-bottom: 2em;
+  width: 100%;
+  height: 100%
+}
+
+.log_set_form {
+  align-items: center;
+  width: 80%;
+  height: fit-content;
+  margin: 2em 1em 1em 1em;
   padding-bottom: 1em;
   border-radius: 10px;
   border: 1px solid #A3F8AB;
@@ -100,63 +104,90 @@ body::-webkit-scrollbar{
   justify-content: space-around;
 }
 
+.large_button {
+  font-size: 5em;
+  color: white;
+  text-align: center;
+  font-family: 'Times New Roman', Times, serif;
+  background-color: #4F6287;
+  border: solid 1px #A3F8AB;
+  height: 150px;
+  width: 40%;
+  border-radius: 10px;
+}
+
+/* Div Elements */
+
+.select_card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #4F6287;
+  width: 85%;
+  height: fit-content;
+  border-radius: 10px;
+  margin: 10%;
+  padding-bottom: 1em;
+}
+
+.standard_button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 5em;
+  width: 10%;
+  border: solid 1px #A3F8AB;
+  background-color: #4F6287;
+  border-radius: 10px;
+}
+
+.card_options_row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
+}
+
 .log_input_wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.form_input_button {
-  height: 35px;
-  width: 55px;
-  border: solid 1px #A3F8AB;
-  background-color: #ADBBD6;
-  border-radius: 10px;
+
+
+
+
+
+#index_center_interactivity {
+  display: flex;
+  flex-direction: row;
+  height: 20%;
+  align-items: center;
+  margin: 5em;
+}
+
+#start_session_button {
+  border-radius: 100px;
+  background-color: #A3F8AB;
+  height: 10em;
+  width: 10em;
+}
+
+#start_session_link {
+  align-self: flex-end;
 }
 
 
 
-.form_heading {
-  font-size: 1.2em;
-  color: white;
-  text-align: center;
-  font-family: 'Times New Roman', Times, serif;
-}
 
-.small_text {
-  font-size: 1em;
-  color: white;
-  text-align: center;
-  font-family: 'Times New Roman', Times, serif;
-  text-decoration: none;
-}
 
-.large_button {
-  font-size: 1.4em;
-  color: white;
-  text-align: center;
-  font-family: 'Times New Roman', Times, serif;
-  background-color: #4F6287;
-  border: solid 1px #A3F8AB;
-  height: 60px;
-  width: 200px;
-  border-radius: 10px;
-}
 
-.standard_form_box {
-  background-color: #ADBBD6;
-  border: solid 1px #A3F8AB;
-  border-radius: 10px;
-  padding: .5em;
-  height: 50px;
-  width: 250px;
-  margin: 0px;
-}
 
-.form_box_wrapper {
-  margin-top: 2.5em;
-  margin-bottom: 2em;
-}
+
+
+
+
 
 .error_message {
   align-self: center;
@@ -170,6 +201,8 @@ body::-webkit-scrollbar{
   align-items: center;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   color: white;
+  width: 100%;
+  height: 25%;
 }
 
 
@@ -178,6 +211,7 @@ form {
   flex-direction: column;
   align-items: center;
   width: 100%;
+  height: fit-content;
 }
 
 button {

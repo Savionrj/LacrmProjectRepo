@@ -21,11 +21,17 @@ function displayAllSessions($userId)
 
   foreach ($allSessions as $individualSession) {
 
+    $routineId = $individualSession['routineId'];
+    $routine = getSingleRoutine($userId, $routineId);
+    $sessionId = $individualSession['sessionId'];
+    $exercisesInSession = getExercisesInSession($sessionId);
+    $exerciseCountInSession = count($exercisesInSession);
+
     echo "
       <form action='previous_session.php' method='post'>
         <input type='hidden' name='sessionIdPass' value=" . $individualSession['sessionId'] . " />
-        <button name='session_card_button' type='submit' class='logged_session_card'>
-          <p class='standard_text'>7/12/23 - 7 Exercises - Chest</p>
+        <button name='session_card_button' type='submit' class='select_card'>
+          <p class='small_text'>".$individualSession['dateLogged']." - ".$exerciseCountInSession." Exercise(s) - ".$routine['routineName']."</p>
         </button>
       </form>
     ";
@@ -47,6 +53,16 @@ function logSession($userId, $routineId)
     ]
 
   );
+}
+
+function getExercisesInSession($sessionId){
+  $exercisesInSession = db_Query("
+    SELECT sessionExerciseId
+    FROM session_exercise
+    WHERE sessionId = $sessionId
+  ")->fetchAll();
+
+  return $exercisesInSession;
 }
 
 /* Routine Functions */
@@ -118,62 +134,97 @@ function displayAllExercisesInRoutine($userId, $routineId)
 
   $exercisesFromRoutine = getAllExercisesInRoutine($userId, $routineId);
 
+  $count = 0;
+
   foreach ($exercisesFromRoutine as $individualExerciseFromRoutine) {
 
     $exerciseId = $individualExerciseFromRoutine['exerciseId'];
     $exerciseData = getExerciseById($exerciseId);
-    $count = 0;
-
+    $count++;
 
     echo "
-      <form method='post'>
-        <div class='select_card' id=>
-          <h3 class='header_text'>" . $exerciseData['exerciseName'] . "</h3>
-          <div class='card_options_row'>
-            <button type='submit' name='add_set' class='form_button' value=" . $exerciseId . "></button>
-            <button type='submit' name='remove_exercise' class='form_button' value=" . $exerciseId . "></button>
-          </div>";
-            if(isset($_REQUEST['add_set'])){
-              if($exerciseData['workoutTypeId'] == 1){
-                  $count++;
+      <div class='select_card' id=>
+        <h3 class='header_text'>" . $exerciseData['exerciseName'] . "</h3>
+        <div class='card_options_row'>
+          <button type='submit' class='standard_button' id='log_button_id_" . $count . "' style='display:none;' onclick='submitForm(" . $count . ")'>
+            <svg width='50' height='50' fill='none' viewBox='0 0 24 24'>
+              <path stroke='#A3F8AB' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M5.75 12.8665L8.33995 16.4138C9.15171 17.5256 10.8179 17.504 11.6006 16.3715L18.25 6.75'/>
+            </svg>
+          </button>
+          <button class='standard_button' id='form_button_id_".$count."' onclick='showForm(".$count. "); switchToConfirmButton(".$count. ")' >
+            <svg width='50' height='50' fill='none' viewBox='0 0 24 24'>
+              <path stroke='#A3F8AB' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M12 5.75V18.25'/>
+              <path stroke='#A3F8AB' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M18.25 12L5.75 12'/>
+            </svg>
+          </button>
+          <button class='standard_button' id='trash_button_id_" . $count . "' onclick='cancelLogging(" . $exerciseId . ")' >
+            <svg width='50' height='50' fill='none' viewBox='0 0 24 24'>
+              <path stroke='red' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6.75 7.75L7.59115 17.4233C7.68102 18.4568 8.54622 19.25 9.58363 19.25H14.4164C15.4538 19.25 16.319 18.4568 16.4088 17.4233L17.25 7.75'/>
+              <path stroke='red' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M9.75 7.5V6.75C9.75 5.64543 10.6454 4.75 11.75 4.75H12.25C13.3546 4.75 14.25 5.64543 14.25 6.75V7.5'/>
+              <path stroke='red' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M5 7.75H19'/>
+            </svg>
+          </button>
+          <button class='standard_button' id='cancel_button_id_".$count."' style='display:none'  onclick='hideForm(".$count. ")' >
+            <svg width='50' height='50' fill='none' viewBox='0 0 24 24'>
+              <path stroke='red' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M17.25 6.75L6.75 17.25'/>
+              <path stroke='red' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6.75 6.75L17.25 17.25'/>
+            </svg>
+          </button>
+        </div>";
 
-                  echo "
-                    <div class='log_input_container'>
-                      <form method='post'>
-                        <div class='log_input_wrapper'>
-                          <h3 class='app_direction_text'>Time</h3>
-                          <div class='form_input_button'></div>
-                        </div>
-                        <div class='log_input_wrapper'>
-                          <h3 class='app_direction_text'>Distance</h3>
-                          <div class='form_input_button'></div>
-                        </div>
-                      </form>
-                    </div>
-                  ";
-                }
-              else {
-                  echo "
-                    <div class='log_input_container'>
-                      <form method='post'>
-                        <div class='log_input_wrapper'>
-                          <h3 class='app_direction_text'>Reps</h3>
-                          <div class='form_input_button'></div>
-                        </div>
-                        <div class='log_input_wrapper'>
-                          <h3 class='app_direction_text'>Weight</h3>
-                          <div class='form_input_button'></div>
-                        </div>
-                      </form>
-                    </div>
-                  ";
-                }
+        if ($exerciseData['workoutTypeId'] == 1) {
+          echo "
+            <form method='post' id='log_set_form_".$count. "' class='log_set_form' style='display:none;'>
+              <div class='log_input_wrapper'>
+                <h3 class='app_direction_text'>Time</h3>
+                <input type='number' class='form_input' />
+              </div>
+              <div class='log_input_wrapper'>
+                <h3 class='app_direction_text'>Distance</h3>
+                <input type='number' class='form_input' />
+              </div>
+            </form>
+          </div>
+        ";
+        } 
+        else {
+          echo "
+            <form method='post' id='log_set_form_".$count. "' class='log_set_form' style='display:none;'>
+              <div class='log_input_wrapper'>
+                <h3 class='app_direction_text'>Reps</h3>
+                <input type='number' class='form_input' />
+              </div>
+              <div class='log_input_wrapper'>
+                <h3 class='app_direction_text'>Weight</h3>
+                <input type='number' class='form_input' />
+              </div>
+            </form>
+          </div>
+        ";
+        }
+
+        echo "
+          <script type='text/javascript'>
+            function showForm(card_count){
+              document.getElementById('log_set_form_'+card_count).style.display = 'flex';
             }
-      echo"
-        </div>
-      </form>";
+            function hideForm(card_count){
+              document.getElementById('log_set_form_'+card_count).style.display = 'none';
+              document.getElementById('form_button_id_'+card_count).style.display = 'flex';
+              document.getElementById('log_button_id_'+card_count).style.display = 'none';
+              document.getElementById('trash_button_id_'+card_count).style.display = 'flex';
+              document.getElementById('cancel_button_id_'+card_count).style.display = 'none';
+            }
+            function switchToConfirmButton(confirm_button_number){
+              document.getElementById('form_button_id_'+confirm_button_number).style.display = 'none';
+              document.getElementById('log_button_id_'+confirm_button_number).style.display = 'flex';
+              document.getElementById('trash_button_id_'+confirm_button_number).style.display = 'none';
+              document.getElementById('cancel_button_id_'+confirm_button_number).style.display = 'flex';
+            }
+          </script>
+        ";
+      }
   }
-}
 
 /* Exercise Functions */
 
@@ -233,8 +284,14 @@ function getSet($sessionExercise)
   return $setData;
 }
 
-function logSet()
+function logCardioSet($workoutTypeId)
 {
+  
+}
+
+
+function logWeightSet($workoutTypeId){
+
 }
 
 /* Log Functions */
@@ -291,5 +348,3 @@ function displayCardioLog($sessionExercise)
   ";
   }
 }
-
-

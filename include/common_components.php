@@ -11,7 +11,6 @@
       </head>
 
       <body>
-      <div id='default_page'>
         
       ";
   }

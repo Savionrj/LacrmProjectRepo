@@ -13,5 +13,10 @@ echo "
       <div id='start_session_button'></div>
     </a>
   </div>
-  <h3 class='header_text'>Start Sessions</h3>
+  <h3 class='header_text'>Start Session</h3>
+  <div>
+    <button class='slide_up_modal' onclick='slideUp()'>
+      
+    </button>
+  </div>
 ";
