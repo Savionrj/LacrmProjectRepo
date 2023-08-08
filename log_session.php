@@ -6,10 +6,8 @@ echoHeader('Log Session');
 $userId = $_SESSION['userId'];
 $routineId = $_SESSION['routineId'];
 $routineData = getSingleRoutine($userId, $routineId);
-$session = getCurrentSession($userId);
-logSessionExercise($session, $routineId, $userId);
 
 echo "
-  <h3 class='header_text'  style='margin-bottom:0px;'>" . $routineData['routineName'] . "</h3>";
+  <h3 class='header_text'  style='margin-bottom:0px;'>" . $routineData['routineName'] ."</h3>";
   displayAllExercisesInRoutine($userId, $routineId);
 
