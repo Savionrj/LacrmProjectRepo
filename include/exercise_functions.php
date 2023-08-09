@@ -27,13 +27,23 @@ function getCurrentSession($userId)
   return $currentSession;
 }
 
+function getMostRecentSession($userId){
+  $recentSession = db_Query("
+    SELECT *
+    FROM session
+    WHERE userId = $userId
+    ORDER BY dateLogged DESC
+    LIMIT 1
+  ")->fetch();
+
+  return $recentSession;
+}
+
 function displayAllSessions($userId)
 {
-
   $allSessions = getSessions($userId);
 
   foreach ($allSessions as $individualSession) {
-
     $routineId = $individualSession['routineId'];
     $routine = getSingleRoutine($userId, $routineId);
     $sessionId = $individualSession['sessionId'];
@@ -44,7 +54,7 @@ function displayAllSessions($userId)
       <form action='previous_session.php' method='post'>
         <input type='hidden' name='sessionIdPass' value=" . $individualSession['sessionId'] . " />
         <button name='session_card_button' type='submit' class='select_card'>
-          <p class='small_text'>" . $individualSession['dateLogged'] . " - " . $exerciseCountInSession . " Exercise(s) - " . $routine['routineName'] . "</p>
+          <p class='small_text'>" . $individualSession['dateLogged'] . " - " . $exerciseCountInSession . " Exercises - " . $routine['routineName'] . "</p>
         </button>
       </form>
     ";
@@ -116,6 +126,37 @@ function getSingleRoutine($userId, $routineId)
   return $routineData;
 }
 
+function addRoutine($routineName){
+  $userId = $_SESSION['userId'];
+
+  db_Query(
+    "
+    INSERT INTO routine(routineName, userId)
+    VALUES(:routineName, :userId)
+  ",
+    [
+      'routineName' => $routineName,
+      'userId' => $userId
+    ]
+  );
+}
+
+function displayRoutineOptions($userId){
+  $routineData = getRoutines($userId);
+
+  foreach ($routineData as $individualRoutine) {
+    $routineId = $individualRoutine['routineId'];
+    echo "
+      <option value=".$routineId." >".$individualRoutine['routineName']."</option>
+    ";
+  }
+
+}
+
+
+
+
+
 
 function displayAllRoutines($userId)
 {
@@ -123,10 +164,29 @@ function displayAllRoutines($userId)
   $routineData = getRoutines($userId);
 
   foreach ($routineData as $individualRoutine) {
+    if (isset($_REQUEST['expand_routine'])) {
+      $_SESSION['current_routineId'] = $_REQUEST['routineId'];
+      header('location:edit_routine.php');
+    }
     echo "
-      <button type=submit name='routine_button' class='select_card' value=" . $individualRoutine['routineId'] . ">
+    <form method='post'>
+      <input type='hidden' name='routineId' value=" . $individualRoutine['routineId'] . " />
+      <button type='submit' name='expand_routine' class='select_card'>
         <h3 class='header_text'>" . $individualRoutine['routineName'] . "</h3>
-      </button>";
+      </button>
+    </form>
+    ";
+  }
+}
+
+function displayAllRoutinesToLog($userId){
+  $routineData = getRoutines($userId);
+  foreach ($routineData as $individualRoutine) {
+    echo"
+      <button type=submit name='routine_button' class='select_card' value=".$individualRoutine['routineId'].">
+        <h3 class='header_text'>".$individualRoutine['routineName']."</h3>
+      </button>
+    ";
   }
 }
 
@@ -148,7 +208,7 @@ function getExerciseById($exerciseId)
   $exerciseData = db_Query("
     SELECT *
     FROM exercise
-    WHERE exerciseId = '$exerciseId'
+    WHERE exerciseId = $exerciseId
   ")->fetch();
 
   return $exerciseData;
@@ -309,6 +369,15 @@ function addExercise($exerciseName, $use_reps, $use_steps, $use_weight, $use_min
   );
 }
 
+function updateExercise($exerciseId, $exerciseName, $use_reps, $use_steps, $use_weight, $use_minutes){
+
+  db_Query("
+    UPDATE exercise
+    SET `exerciseName` = $exerciseName, use_reps = $use_reps, use_minutes = $use_minutes, use_steps = $use_steps, use_weight = $use_weight
+    WHERE exerciseId = $exerciseId
+  ");
+}
+
 function deleteExercise($exerciseId){
   db_Query("
     DELETE
@@ -321,50 +390,43 @@ function deleteExercise($exerciseId){
 function displayAllExercises($userId){
 
   $exerciseData = getExercises($userId);
-  $count = 0;
 
   foreach($exerciseData as $individualExercise){
-
-    $exerciseId = $individualExercise['exerciseId'];
-    if(isset($_REQUEST['edit'])){
-      $_SESSION['edit_exerciseId'] == $exerciseId;
-      header('location:new_exercise.php');
+    if(isset($_REQUEST['expand_exercise'])){
+      $_SESSION['current_exerciseId'] = $_REQUEST['exerciseId'];
+      header('location:edit_exercise.php');
     }
-    elseif(isset($_REQUEST['delete'])){
-      deleteExercise($exerciseId);
-      header('location:manage_exercises.php');
-    }
-
-    $count++;
     echo "
-      <div class='select_card'>
-        <h3 class='header_text'>" . $individualExercise['exerciseName'] . "</h3>
-          <form class='card_options_row'>
-            <button type='submit' class='standard_button' style='border-color:#A3F8AB' name='edit'>
-              <img src='include/icons/edit.svg' alt='edit exercise' />
-            </button>
-            <button type='submit' class='standard_button' style='border-color:red' name='delete'>
-              <img src='include/icons/trash.svg' alt='delete exercise' />
-            </button>
-          </form>
-      </div>
-    ";
-  }
-}
-
-function displayAllExercises_fromAddExercise($userId)
-{
-
-  $exerciseData = getExercises($userId);
-
-  foreach ($exerciseData as $individualExercise) {
-    echo "
-      <button type=submit name='add_to_session' class='header_text_container' value=" . $individualExercise['exerciseId'] . " style='background-color: #F0F8EC'>
+    <form method='post'>
+      <input type='hidden' name='exerciseId' value=".$individualExercise['exerciseId']." />
+      <button type='submit' name='expand_exercise' class='select_card'>
         <h3 class='header_text'>" . $individualExercise['exerciseName'] . "</h3>
       </button>
+    </form>
     ";
   }
 }
+
+// function displayAllExercises_fromAddExercise($userId)
+// {
+
+//   $exerciseData = getExercises($userId);
+
+//   foreach ($exerciseData as $individualExercise) {
+//     if(isset($_REQUEST['expand_exercise'])){
+//       $_SESSION['current_exerciseId'] = $_REQUEST['exerciseId'];
+//       header('location:edit_exercise.php');
+//     }
+//     echo "
+//     <form method='post'>
+//       <input type='hidden' name='exerciseId' value=".$individualExercise['exerciseId']."
+//       <button type='submit' name='expand_exercise' class='header_text_container' style='background-color: #F0F8EC'>
+//         <h3 class='header_text'>" . $individualExercise['exerciseName'] . "</h3>
+//       </button>
+//     </form>
+//     ";
+//   }
+// }
 
 function logSessionExercise($session, $routineId, $userId)
 {

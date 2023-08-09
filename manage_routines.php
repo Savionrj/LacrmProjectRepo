@@ -1,7 +1,7 @@
 <?php
 
 include_once('include/init.php');
-echoHeader('Manage Exercises');
+echoHeader('Manage Routines');
 
 $userId = $_SESSION['userId'];
 
@@ -10,10 +10,10 @@ echo "
     <img src='include/icons/search.svg' />
   </div>";
 
-  displayAllExercises($userId);
+displayAllRoutines($userId);
 
 echo "
-  <a href='new_exercise.php' class='create_new_button'>
+  <a href='new_routine.php' class='create_new_button'>
     <h3 class='header_text'>Create New</h3>
   </a>
 

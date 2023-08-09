@@ -20,7 +20,7 @@ echo "
 
     <p class='app_direction_text'>Or</br>Pick A Routine</p>";
 
-displayAllRoutines($userId);
+displayAllRoutinesToLog($userId);
 
 echo "
   </form>

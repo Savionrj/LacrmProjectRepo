@@ -1,22 +1,31 @@
 <?php
 
 include_once('include/init.php');
-echoHeader('New Exercise');
+echoHeader('Edit Exercise');
 
-if(isset($_REQUEST['add_exercise'])){
+$exerciseId = $_SESSION['current_exerciseId'];
+$exerciseData = getExerciseById($exerciseId);
+
+$exerciseName = $exerciseData['exerciseName'];
+
+if (isset($_REQUEST['update_exercise'])) {
   $exerciseName = $_REQUEST['exercise_name'];
   $use_reps = $_REQUEST['use_reps'];
   $use_steps = $_REQUEST['use_steps'];
   $use_weight = $_REQUEST['use_weight'];
   $use_minutes = $_REQUEST['use_minutes'];
-  addExercise($exerciseName, $use_reps, $use_steps, $use_weight, $use_minutes);
+  updateExercise($exerciseId, $exerciseName, $use_reps, $use_steps, $use_weight, $use_minutes);
+  header('location:manage_exercises.php');
+} 
+elseif (isset($_REQUEST['delete'])) {
+  deleteExercise($exerciseId);
   header('location:manage_exercises.php');
 }
 
 echo "
   <form method='post'>
     <h3 class='form_heading'>Exercise Name</h3>
-    <input type='text' name='exercise_name' class='standard_form_box' required /> <br/> <br/>
+    <input type='text' name='exercise_name' class='standard_form_box' value=".$exerciseName. " required /> <br/> <br/>
     <div class='checkbox_grid'>
       <div class=checkbox_col>
         <div class='checkbox_single'>
@@ -43,7 +52,10 @@ echo "
         </div>
       </div>
     </div>
-    <button type='submit' class='create_new_button' name='add_exercise'>
+    <button style='border-color:red' class='standard_button' type='submit' value='$exerciseId' name='delete'>
+      <img src='include/icons/trash.svg' height='100' width='100' />
+    </button>
+    <button type='submit' class='create_new_button' name='update_exercise'>
       <h3 class='header_text'>Done</h3>
     </button>
   </form>
@@ -51,10 +63,3 @@ echo "
     <p class='small_text'>Cancel</p>
   </a>
 ";
-
-// <h3 class='form_heading' style='top-margin:0px'>Routine</h3>
-// <select name='routine' class='standard_form_box' >
-//   <option value='0' ></option>
-//   <option value='2' >Upper Body</option>
-//   <option value='3' >Lower Body</option>
-// </select>
