@@ -2,11 +2,26 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: gray;
-  background-color: #2D3D5B;
-  display: flex;
   flex-direction: column;
+  background-color: #2D3D5B;
+}
+
+#home_page {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
   align-items: center;
+  flex-direction: column;
+}
+
+#all_sessions_page {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  flex-direction: column;
 }
 
 /* Text CSS */
@@ -16,7 +31,6 @@ body {
   color: white;
   text-align: center;
   font-family: 'Times New Roman', Times, serif;
-  margin-top: 25%;
   margin-bottom: 25%;
 }
 
@@ -145,6 +159,7 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  align-items: center;
   width: 100%;
 }
 
@@ -161,10 +176,18 @@ body {
 
 #index_center_interactivity {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  width: 100%;
   height: 20%;
-  align-items: center;
+  justify-content: center;
   margin: 5em;
+}
+
+#nav_arrows {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 30%;
 }
 
 #start_session_button {
@@ -175,7 +198,14 @@ body {
 }
 
 #start_session_link {
-  align-self: flex-end;
+  display: flex;
+  justify-content: center;
+  width: 20%;
+  align-self: center;
+}
+
+#sign_out_button {
+  margin-top: 20em;
 }
 
 
@@ -216,4 +246,64 @@ form {
 
 button {
   border: none;
+  background-color: transparent;
+  height: fit-content;
+  width: fit-content;
+}
+
+a {
+  text-decoration: none;
+}
+
+.create_new_button {
+  margin: 5%;
+  font-family: 'Times New Roman', Times, serif;
+  background-color: #4F6287;
+  border: solid 1px #A3F8AB;
+  height: fit-content;
+  width: 60%;
+  border-radius: 10px;
+}
+
+.small_button {
+  background-color: #4F6287;
+  border: solid 1px #A3F8AB;
+  height: fit-content;
+  width: 20%;
+}
+
+.search_bar{
+  display: flex;
+  background-color: #4F6287;
+  width: 85%;
+  height: 5%;
+  margin-top: 5%;
+  border-radius: 10px;
+}
+
+.checkbox_grid{
+  display: flex;
+  width: 100%;
+  height: 100%;
+  margin-top: 30;
+  margin-bottom: 30%;
+}
+
+.checkbox_col{
+  display: flex;
+  width: 50%;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.checkbox_single{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.checkbox{
+  height: 50px;
+  width: 50px;
 }

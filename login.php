@@ -13,7 +13,7 @@ echo "
     <input type='text' name='username' class='standard_form_box' required /> <br/> <br/>
     <h3 class='form_heading'>Password</h3>
     <input type='password' name='password' class='standard_form_box' required /> <br/> <br/>
-    <input type='submit' name='login' value='Login' class='large_button' class />
+    <input type='submit' name='login' value='Login' class='large_button' />
   </form>
   <div class='switch_page_container'>
     <p class='small_text'>Don't Have an Account?</p>
