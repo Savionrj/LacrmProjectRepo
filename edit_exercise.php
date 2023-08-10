@@ -6,7 +6,7 @@ echoHeader('Edit Exercise');
 $exerciseId = $_SESSION['current_exerciseId'];
 $exerciseData = getExerciseById($exerciseId);
 
-$exerciseName = $exerciseData['exerciseName'];
+$exerciseHead = $exerciseData['exerciseName'];
 
 if (isset($_REQUEST['update_exercise'])) {
   $exerciseName = $_REQUEST['exercise_name'];
@@ -14,18 +14,22 @@ if (isset($_REQUEST['update_exercise'])) {
   $use_steps = $_REQUEST['use_steps'];
   $use_weight = $_REQUEST['use_weight'];
   $use_minutes = $_REQUEST['use_minutes'];
+  debugOutput($_REQUEST);
   updateExercise($exerciseId, $exerciseName, $use_reps, $use_steps, $use_weight, $use_minutes);
   header('location:manage_exercises.php');
 } 
 elseif (isset($_REQUEST['delete'])) {
-  deleteExercise($exerciseId);
-  header('location:manage_exercises.php');
+  if($_REQUEST['delete'] == $exerciseId){
+    deleteExercise($exerciseId);
+    header('location:manage_exercises.php');
+  }
 }
 
 echo "
-  <form method='post'>
+</br></br></br></br></br></br></br></br></br></br>
+  <form class='centered_form' method='post' id='update_exercise'>
     <h3 class='form_heading'>Exercise Name</h3>
-    <input type='text' name='exercise_name' class='standard_form_box' value=".$exerciseName. " required /> <br/> <br/>
+    <input type='text' name='exercise_name' class='standard_form_box' value='$exerciseHead' required /> <br/> <br/>
     <div class='checkbox_grid'>
       <div class=checkbox_col>
         <div class='checkbox_single'>
@@ -52,14 +56,20 @@ echo "
         </div>
       </div>
     </div>
-    <button style='border-color:red' class='standard_button' type='submit' value='$exerciseId' name='delete'>
+    <button class='side_nav_button' type='submit' value='$exerciseId' name='delete' style='border-color:red; width:200px; height:200px;'>
       <img src='include/icons/trash.svg' height='100' width='100' />
     </button>
-    <button type='submit' class='create_new_button' name='update_exercise'>
-      <h3 class='header_text'>Done</h3>
-    </button>
   </form>
-  <a href='manage_exercises.php' class='small_button'>
-    <p class='small_text'>Cancel</p>
-  </a>
+
+  <div class='bottom_nav'>
+    <a href='manage_exercises.php' class='side_nav_button'>
+      <img src='include/icons/undo.svg' />
+    </a>
+    <a href='index.php' class='nav_button' >
+      <img src='include/icons/home.svg' />
+    </a>
+    <button type='submit' class='side_nav_button' name='update_exercise' form='update_exercise'>
+      <img height='100' width='100' src='include/icons/check.svg' />
+    </button>
+  </div>
 ";

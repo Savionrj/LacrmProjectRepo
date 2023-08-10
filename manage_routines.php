@@ -5,19 +5,18 @@ echoHeader('Manage Routines');
 
 $userId = $_SESSION['userId'];
 
-echo "
-  <div class='search_bar'>
-    <img src='include/icons/search.svg' />
-  </div>";
-
 displayAllRoutines($userId);
 
 echo "
-  <a href='new_routine.php' class='create_new_button'>
-    <h3 class='header_text'>Create New</h3>
-  </a>
-
-  <a href='index.php' class='small_button'>
-    <p class='small_text'>Back</p>
-  </a>
+  <div class='bottom_nav'>
+    <a href='manage.php' class='side_nav_button'>
+      <img src='include/icons/undo.svg' />
+    </a>
+    <a href='index.php' class='nav_button' >
+      <img src='include/icons/home.svg' />
+    </a>
+    <a href='new_routine.php' class='side_nav_button'>
+      <img height='100' width='100' src='include/icons/plus.svg' />
+    </a>
+  </div>
 ";

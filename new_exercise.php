@@ -14,7 +14,8 @@ if(isset($_REQUEST['add_exercise'])){
 }
 
 echo "
-  <form method='post'>
+</br></br></br></br></br></br></br></br></br></br>
+  <form class='centered_form' method='post' id='new_exercise_form'>
     <h3 class='form_heading'>Exercise Name</h3>
     <input type='text' name='exercise_name' class='standard_form_box' required /> <br/> <br/>
     <div class='checkbox_grid'>
@@ -43,13 +44,19 @@ echo "
         </div>
       </div>
     </div>
-    <button type='submit' class='create_new_button' name='add_exercise'>
-      <h3 class='header_text'>Done</h3>
-    </button>
   </form>
-  <a href='manage_exercises.php' class='small_button'>
-    <p class='small_text'>Cancel</p>
-  </a>
+
+  <div class='bottom_nav'>
+    <a href='manage_exercises.php' class='side_nav_button'>
+      <img src='include/icons/undo.svg' />
+    </a>
+    <a href='index.php' class='nav_button' >
+      <img src='include/icons/home.svg' />
+    </a>
+    <button type='submit' class='side_nav_button' name='add_exercise' form='new_exercise_form'>
+      <img height='100' width='100' src='include/icons/check.svg' />
+    </button>
+  </div>
 ";
 
 // <h3 class='form_heading' style='top-margin:0px'>Routine</h3>

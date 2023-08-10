@@ -9,21 +9,25 @@ if(isset($_REQUEST['register'])){
 }
 
 echo "
-  <form action='#' method='post'>
-    <h3 class='form_heading'>First Name</h3>
-    <input type='text' name='firstName' class='standard_form_box' required /> <br/> 
-    <h3 class='form_heading'>Last Name</h3>
-    <input type='text' name='lastName' class='standard_form_box' required /> <br/> 
-    <h3 class='form_heading'>Email Address</h3>
-    <input type='email' name='email' class='standard_form_box' required /> <br/> 
+  <div class='page_header'>
+    <h3 class='head_text'>Sign Up</h3>
+  </div>
+
+  <form action='#' method='post' id='register_form' class='text_input_form'>
     <h3 class='form_heading'>Username</h3>
-    <input type='text' name='username' class='standard_form_box' required /> <br/> 
+    <input type='text' name='username' class='standard_form_box' required /></br>
     <h3 class='form_heading'>Password</h3>
-    <input type='password' name='password' class='standard_form_box' required /> <br/> 
-    <input type='submit' name='register' value='Sign Up' class='large_button' required />
+    <input type='password' name='password' class='standard_form_box' required /></br>
+    <h3 class='form_heading'>First Name</h3>
+    <input type='text' name='firstName' class='standard_form_box' required /></br>
+    <h3 class='form_heading'>Email Address</h3>
+    <input type='email' name='email' class='standard_form_box' required />
   </form>
-  <div class='switch_page_container'>
-    <p class='small_text'>Already Have an Account?</p>
-    <a href='login.php' class='small_text'>Login Here</a>
+
+  <div class='page_foot'>
+    <p class='minor_text'>Already Have an Account?</p>
+    <a href='login.php' class='minor_text'>Login Here</a></br>
+    <button type='submit' class='new_page_button' form='register_form' name='register'>Register
+    </button>
   </div>
 ";

@@ -23,12 +23,11 @@ function register(){
     $hash = password_hash($password, PASSWORD_DEFAULT);
 
     db_Query("
-      INSERT INTO user(firstName, lastName, email, username, password)
-      VALUES(:firstName, :lastName, :email, :username, :password)
+      INSERT INTO user(firstName, email, username, password)
+      VALUES(:firstName, :email, :username, :password)
     ",
       [
         'firstName' => $_REQUEST["firstName"],
-        'lastName' => $_REQUEST["lastName"],
         'email' => $_REQUEST["email"],
         'username' => $_REQUEST["username"],
         'password' => $hash

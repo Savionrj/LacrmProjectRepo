@@ -10,14 +10,21 @@ if (isset($_REQUEST['add_routine'])) {
 }
 
 echo "
-  <form method='post' style='align-self:center'>
+</br></br></br></br></br></br></br></br></br></br>
+  <form class='centered_form' method='post' style='align-self:center' id='new_routine_form'>
     <h3 class='form_heading'>Routine Name</h3>
     <input type='text' name='routine_name' class='standard_form_box' required /> <br/> <br/>
-    <button type='submit' class='create_new_button' name='add_routine'>
-      <h3 class='header_text'>Done</h3>
-    </button>
   </form>
-  <a href='manage_routines.php' class='small_button'>
-    <p class='small_text'>Cancel</p>
-  </a>
+
+  <div class='bottom_nav'>
+    <a href='manage_routines.php' class='side_nav_button'>
+      <img src='include/icons/undo.svg' />
+    </a>
+    <a href='index.php' class='nav_button' >
+      <img src='include/icons/home.svg' />
+    </a>
+    <button type='submit' class='side_nav_button' name='add_routine' form='new_routine_form'>
+      <img height='100' width='100' src='include/icons/check.svg' />
+    </button>
+  </div>
 ";

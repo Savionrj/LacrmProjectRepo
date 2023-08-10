@@ -9,6 +9,8 @@ function getSessions($userId)
     SELECT *
     FROM session
     WHERE userId = '$userId'
+    ORDER BY sessionId
+    DESC
   ")->fetchAll();
 
   return $sessionData;
@@ -27,7 +29,8 @@ function getCurrentSession($userId)
   return $currentSession;
 }
 
-function getMostRecentSession($userId){
+function getMostRecentSession($userId)
+{
   $recentSession = db_Query("
     SELECT *
     FROM session
@@ -44,18 +47,24 @@ function displayAllSessions($userId)
   $allSessions = getSessions($userId);
 
   foreach ($allSessions as $individualSession) {
+
+    $sessionId = $individualSession['sessionId'];
+
+    if (isset($_REQUEST['session_card_button'])) {
+      if($_REQUEST['session_card_button']== $sessionId){
+        $_SESSION['observed_session'] = $sessionId;
+        header('location:previous_session.php');
+      }
+    }
+    
     $routineId = $individualSession['routineId'];
     $routine = getSingleRoutine($userId, $routineId);
-    $sessionId = $individualSession['sessionId'];
     $exercisesInSession = getExercisesInSession($sessionId);
     $exerciseCountInSession = count($exercisesInSession);
 
     echo "
-      <form action='previous_session.php' method='post'>
-        <input type='hidden' name='sessionIdPass' value=" . $individualSession['sessionId'] . " />
-        <button name='session_card_button' type='submit' class='select_card'>
-          <p class='small_text'>" . $individualSession['dateLogged'] . " - " . $exerciseCountInSession . " Exercises - " . $routine['routineName'] . "</p>
-        </button>
+      <form action='#' method='post' class='centered_form'>
+        <button name='session_card_button' type='submit' class='minor_select_card' value=".$sessionId.">" . $individualSession['dateLogged'] . "</br>" . $exerciseCountInSession . " Exercises - " . $routine['routineName'] . "</button>
       </form>
     ";
   }
@@ -78,7 +87,18 @@ function logSession($userId, $routineId)
   );
 }
 
-function getExercisesInSession($sessionId){
+function getExerciseIdsFromSesEx($sessionId){
+  $exIds = db_Query("
+    SELECT exerciseId
+    FROM session_exercise
+    WHERE sessionId = $sessionId
+  ")->fetchAll();
+
+  return $exIds;
+}
+
+function getExercisesInSession($sessionId)
+{
   $exercisesInSession = db_Query("
     SELECT sessionExerciseId
     FROM session_exercise
@@ -126,7 +146,8 @@ function getSingleRoutine($userId, $routineId)
   return $routineData;
 }
 
-function addRoutine($routineName){
+function addRoutine($routineName)
+{
   $userId = $_SESSION['userId'];
 
   db_Query(
@@ -141,16 +162,16 @@ function addRoutine($routineName){
   );
 }
 
-function displayRoutineOptions($userId){
+function displayRoutineOptions($userId)
+{
   $routineData = getRoutines($userId);
 
   foreach ($routineData as $individualRoutine) {
     $routineId = $individualRoutine['routineId'];
     echo "
-      <option value=".$routineId." >".$individualRoutine['routineName']."</option>
+      <option value=" . $routineId . " >" . $individualRoutine['routineName'] . "</option>
     ";
   }
-
 }
 
 
@@ -169,23 +190,20 @@ function displayAllRoutines($userId)
       header('location:edit_routine.php');
     }
     echo "
-    <form method='post'>
+    <form method='post' class='centered_form' style='height:30%'>
       <input type='hidden' name='routineId' value=" . $individualRoutine['routineId'] . " />
-      <button type='submit' name='expand_routine' class='select_card'>
-        <h3 class='header_text'>" . $individualRoutine['routineName'] . "</h3>
-      </button>
+      <button type='submit' name='expand_routine' class='big_card'>" . $individualRoutine['routineName'] . "</button>
     </form>
     ";
   }
 }
 
-function displayAllRoutinesToLog($userId){
+function displayAllRoutinesToLog($userId)
+{
   $routineData = getRoutines($userId);
   foreach ($routineData as $individualRoutine) {
-    echo"
-      <button type=submit name='routine_button' class='select_card' value=".$individualRoutine['routineId'].">
-        <h3 class='header_text'>".$individualRoutine['routineName']."</h3>
-      </button>
+    echo "
+      <button type=submit name='routine_button' class='select_card' value=" . $individualRoutine['routineId'] . ">" . $individualRoutine['routineName'] . "</button>
     ";
   }
 }
@@ -204,7 +222,6 @@ function getAllExercisesInRoutine($userId, $routineId)
 
 function getExerciseById($exerciseId)
 {
-
   $exerciseData = db_Query("
     SELECT *
     FROM exercise
@@ -212,6 +229,17 @@ function getExerciseById($exerciseId)
   ")->fetch();
 
   return $exerciseData;
+}
+
+function getExerciseNameById($exerciseId){
+
+  $exerciseName = db_Query("
+    SELECT exerciseName
+    FROM exercise
+    WHERE exerciseId = $exerciseId
+  ")->fetch();
+
+  return $exerciseName['exerciseName'];
 }
 
 function displayAllExercisesInRoutine($userId, $routineId)
@@ -231,94 +259,105 @@ function displayAllExercisesInRoutine($userId, $routineId)
     $sessionExercise = getSessionExercise($sessionId, $exerciseId);
     $sessionExerciseId = $sessionExercise['sessionExerciseId'];
     $count++;
-    if(isset($_REQUEST['log_weight_set'])){
+    if (isset($_REQUEST['log_set'])) {
       $setCount++;
     }
 
     echo "
-      <div class='select_card'>
-        <h3 class='header_text'>" . $exerciseData['exerciseName'] . "</h3>
-        <div class='card_options_row'>
-          <button class='standard_button' id='form_button_id_" . $count . "' onclick='showForm(" . $count . "); switchToConfirmButton(" . $count . ")' >
-            <img src='include/icons/plus.svg' alt='plus mark' />
-          </button>
-          <h2 class='form_heading' id='main_set_count_id_".$count."' >$setCount</h2>
-          <button style='border-color:red' class='standard_button' id='trash_button_id_" . $count . "' onclick='removeExercise(" . $exerciseId . ")' >
-            <img src='include/icons/trash.svg' />
-          </button>
-        </div>";
+      <div style='width:65%;' class='texted_select_card'>
+          <button style='height:100px; border: 2px #A3F8AB solid;' class='side_nav_button' id='form_button_id_" . $count . "' onclick='showForm(" . $count . "); switchToConfirmButton(" . $count . ")' >
+              <img src='include/icons/plus.svg' alt='plus mark' />
+            </button>
+          <h3 class='header_text'>" . $exerciseData['exerciseName'] . "</h3>";
 
-    if ($exerciseData['workoutTypeId'] == 1) {
-      if (isset($_REQUEST['log_cardio_set'])) {
-        $time = $_REQUEST['time'];
-        $distance = $_REQUEST['distance'];
-        logCardioSet($time, $distance, $sessionExerciseId);
-      }
-      echo "
-        <form method='post' action='#' id='log_set_form_" . $count . "' style='display:none;'>
-          <div class='card_options_row'>
-            <button type='submit' class='standard_button' name='log_cardio_set' id='log_button_id_" . $count . "' style='display:none;' onclick='submitForm(" . $count . ")'>
-              <img src='include/icons/check.svg' alt='checkmark' />
-            </button>
-            <h2 class='form_heading' id='set_count_id_" . $count . "' >". $setCount."</h2>
-            <button type='reset' class='standard_button' id='cancel_button_id_" . $count . "' style='display:none; border-color:red;'  onclick='hideForm(" . $count . ")' >
-              <img src='include/icons/close.svg' alt='close form' />
-            </button>
-          </div>
-          <div class='log_set_form'>
-            <div class='log_input_wrapper'>
-              <h3 class='app_direction_text'>Time</h3>
-              <input name='time' type='number' min='0' class='form_input' />
-            </div>
-            <div class='log_input_wrapper'>
-              <h3 class='app_direction_text'>Distance</h3>
-              <input name='distance' type='number' min='0' class='form_input' />
-            </div>
-          </div>
-        </form>
-      </div>
-    ";
-    } elseif ($exerciseData['workoutTypeId'] == 2) {
-      if (isset($_REQUEST['log_weight_set'])) {
+    if (isset($_REQUEST['log_set'])) {
+      if ($_REQUEST['log_set'] == $exerciseId) {
         $weight = $_REQUEST['weight'];
         $reps = $_REQUEST['reps'];
-        logWeightSet($weight, $reps, $sessionExerciseId);
+        $minutes = $_REQUEST['minutes'];
+        $steps = $_REQUEST['steps'];
+        logSet($weight, $reps, $minutes, $steps, $sessionExerciseId);
       }
-      echo "
-        <form method='post' action='#' id='log_set_form_" . $count . "' style='display:none;' >
+    }
+    echo "
+        <form method='post' class='centered_form' action='log_session.php' id='log_form_" . $count . "' style='display:none;' >
           <div class='card_options_row'>
-            <button type='submit' class='standard_button' name='log_weight_set' id='log_button_id_" . $count . "' style='display:none;' onclick='submitForm(" . $count . ")'>
+            <button type='submit' class='standard_button' value=" . $exerciseId . " name='log_set' id='log_button_id_" . $count . "' style='display:none;' onclick='submitForm(" . $count . ")'>
               <img src='include/icons/check.svg' height='50' width='50' alt='checkmark' >
             </button>
-            <h2 class='form_heading' id='set_count_id_" . $count . "' >". $setCount."</h2>
+            <h2 class='form_heading' id='set_count_id_" . $count . "' >" . $setCount . "</h2>
             <button type='reset' class='standard_button' id='cancel_button_id_" . $count . "' style='display:none; border-color:red;'  onclick='hideForm(" . $count . ")' >
               <img src='include/icons/close.svg' height='50' width='50' alt='close' >
             </button>
           </div>
-          <div class='log_set_form'>
-            <div class='log_input_wrapper'>
-              <h3 class='app_direction_text'>Reps</h3>
-              <input name='reps' type='number' min='1' class='form_input' />
-            </div>
-            <div class='log_input_wrapper'>
-              <h3 class='app_direction_text'>Weight</h3>
-              <input name='weight' type='number' min='0' class='form_input' />
-            </div>
+          <div class='log_set_form'>";
+    if ($exerciseData['use_reps'] == 1) {
+      echo "
+                <div class='log_input_wrapper'>
+                  <h3 class='app_direction_text'>Reps</h3>
+                  <input name='reps' type='number' min='1' class='form_input' />
+                </div>
+              ";
+    } else {
+      echo "
+                  <input name='reps' type='hidden' class='form_input' value='0' />
+              ";
+    }
+
+    if ($exerciseData['use_minutes'] == 1) {
+      echo "
+                <div class='log_input_wrapper'>
+                  <h3 class='app_direction_text'>Minutes</h3>
+                  <input name='minutes' type='number' min='1' class='form_input' />
+                </div>
+              ";
+    } else {
+      echo "
+                  <input name='minutes' type='hidden' class='form_input' value='0' />
+              ";
+    }
+
+    if ($exerciseData['use_steps'] == 1) {
+      echo "
+                <div class='log_input_wrapper'>
+                  <h3 class='app_direction_text'>Steps</h3>
+                  <input name='steps' type='number' min='1' class='form_input' />
+                </div>
+              ";
+    } else {
+      echo "
+                  <input name='steps' type='hidden' class='form_input' value='0' />
+              ";
+    }
+
+    if ($exerciseData['use_weight'] == 1) {
+      echo "
+                <div class='log_input_wrapper'>
+                  <h3 class='app_direction_text'>Weight</h3>
+                  <input name='weight' type='number' min='1' class='form_input' />
+                </div>
+              ";
+    } else {
+      echo "
+                  <input name='weight' type='hidden' class='form_input' value='0' />
+              ";
+    }
+    echo "
           </div>
         </form>
       </div>
     ";
-    }
   }
-
 
   echo "
     <script type='text/javascript'>
+
       function showForm(card_count){
-        document.getElementById('log_set_form_'+card_count).style.display = 'flex';
+        document.getElementById('log_form_'+card_count).style.display = 'flex';
+        document.getElementById('form_button_id_'+card_count).style.display='none';
       }
       function hideForm(card_count){
-        document.getElementById('log_set_form_'+card_count).style.display = 'none';
+        document.getElementById('log_form_'+card_count).style.display = 'none';
         document.getElementById('form_button_id_'+card_count).style.display = 'flex';
         document.getElementById('log_button_id_'+card_count).style.display = 'none';
         document.getElementById('trash_button_id_'+card_count).style.display = 'flex';
@@ -326,11 +365,8 @@ function displayAllExercisesInRoutine($userId, $routineId)
         document.getElementById('main_set_count_id_'+card_count).style.display = 'flex';
       }
       function switchToConfirmButton(confirm_button_number){
-        document.getElementById('form_button_id_'+confirm_button_number).style.display = 'none';
         document.getElementById('log_button_id_'+confirm_button_number).style.display = 'flex';
-        document.getElementById('trash_button_id_'+confirm_button_number).style.display = 'none';
         document.getElementById('cancel_button_id_'+confirm_button_number).style.display = 'flex';
-        document.getElementById('main_set_count_id_'+confirm_button_number).style.display = 'none';
       }
     </script>
   ";
@@ -351,10 +387,12 @@ function getExercises($userId)
   return $exerciseData;
 }
 
-function addExercise($exerciseName, $use_reps, $use_steps, $use_weight, $use_minutes){
+function addExercise($exerciseName, $use_reps, $use_steps, $use_weight, $use_minutes)
+{
   $userId = $_SESSION['userId'];
 
-  db_Query("
+  db_Query(
+    "
     INSERT INTO exercise(exerciseName, userId, use_reps, use_minutes, use_steps, use_weight)
     VALUES(:exerciseName, :userId, :use_reps, :use_minutes, :use_steps, :use_weight)
   ",
@@ -369,42 +407,265 @@ function addExercise($exerciseName, $use_reps, $use_steps, $use_weight, $use_min
   );
 }
 
-function updateExercise($exerciseId, $exerciseName, $use_reps, $use_steps, $use_weight, $use_minutes){
+function updateExercise($exerciseId, $exerciseName, $use_reps, $use_steps, $use_weight, $use_minutes)
+{
+
+  debugOutput($exerciseId, $exerciseName, $use_reps, $use_steps, $use_weight, $use_minutes);
 
   db_Query("
     UPDATE exercise
-    SET `exerciseName` = $exerciseName, use_reps = $use_reps, use_minutes = $use_minutes, use_steps = $use_steps, use_weight = $use_weight
+    SET exerciseName = :exerciseName, use_reps = :use_reps, use_minutes = :use_minutes, use_steps = :use_steps, use_weight = :use_weight
     WHERE exerciseId = $exerciseId
-  ");
+  ",
+    [
+      'exerciseName' => $exerciseName,
+      'use_reps' => intval($use_reps),
+      'use_minutes' => intval($use_minutes),
+      'use_steps' => intval($use_steps),
+      'use_weight' => intval($use_weight)
+    ]
+);
 }
 
-function deleteExercise($exerciseId){
+function deleteExercise($exerciseId)
+{
   db_Query("
     DELETE
     FROM exercise
     WHERE exerciseId = $exerciseId
-    LIMIT 1
+  ");
+
+  db_Query("
+    DELETE
+    FROM routine_exercise
+    WHERE exerciseId = $exerciseId
   ");
 }
 
-function displayAllExercises($userId){
+function deleteExerciseFromRoutine($exerciseId, $routineId)
+{
+  db_Query("
+    DELETE
+    FROM routine_exercise
+    WHERE exerciseId = $exerciseId AND routineId = $routineId
+  ");
+}
+
+function displayAllExercises($userId)
+{
 
   $exerciseData = getExercises($userId);
 
-  foreach($exerciseData as $individualExercise){
-    if(isset($_REQUEST['expand_exercise'])){
+  foreach ($exerciseData as $individualExercise) {
+    if (isset($_REQUEST['expand_exercise'])) {
       $_SESSION['current_exerciseId'] = $_REQUEST['exerciseId'];
       header('location:edit_exercise.php');
     }
     echo "
-    <form method='post'>
-      <input type='hidden' name='exerciseId' value=".$individualExercise['exerciseId']." />
-      <button type='submit' name='expand_exercise' class='select_card'>
+    <form method='post' class='centered_form' style='height:20%'>
+      <input type='hidden' name='exerciseId' value=" . $individualExercise['exerciseId'] . " />
+      <button type='submit' name='expand_exercise' class='big_card'>" . $individualExercise['exerciseName'] . "</button>
+    </form>
+    ";
+  }
+}
+
+function displayAllExercisesForAdd($userId, $routineId)
+{
+  $exerciseData = getExercises($userId);
+
+  foreach ($exerciseData as $individualExercise) {
+    $exerciseId = $individualExercise['exerciseId'];
+    if (isset($_REQUEST['add_exercise'])) {
+      if ($_REQUEST['add_exercise'] == $exerciseId) {
+        linkExerciseToRoutine($exerciseId, $routineId, $userId);
+        header('location:edit_routine.php');
+      }
+    }
+    echo "
+    <form method='post' class='centered_form'>
+      <button type='submit' name='add_exercise' class='select_card' value=" . $exerciseId . ">" . $individualExercise['exerciseName'] . "</button>
+    </form>
+    ";
+  }
+}
+
+function displayAllExercisesForFreestyle($userId)
+{
+  $exerciseData = getExercises($userId);
+
+  foreach ($exerciseData as $individualExercise) {
+    $exerciseId = $individualExercise['exerciseId'];
+    if (isset($_REQUEST['add_exercise_freestyle'])) {
+      if ($_REQUEST['add_exercise_freestyle'] == $exerciseId) {
+        addToFreestyle($exerciseId, $userId);
+        header('location:log_session.php');
+      }
+    }
+    echo "
+    <form class='centered_form' method='post'>
+      <button type='submit' name='add_exercise_freestyle' class='texted_select_card' value=" . $exerciseId . ">
         <h3 class='header_text'>" . $individualExercise['exerciseName'] . "</h3>
       </button>
     </form>
     ";
   }
+}
+
+function linkExerciseToRoutine($exerciseId, $routineId, $userId)
+{
+  db_Query(
+    "
+      INSERT INTO routine_exercise(exerciseId, routineId, userId)
+      VALUES(:exerciseId, :routineId, :userId)
+      ",
+    [
+      'exerciseId' => $exerciseId,
+      'routineId' => $routineId,
+      'userId' => $userId
+    ]
+  );
+}
+
+function getFreestyleExercises($userId, $sessionId, $freestyle){
+  $freestyleExercises = db_Query("
+    SELECT *
+    FROM session_exercise
+    WHERE userId = $userId AND sessionId = $sessionId and freestyle = $freestyle
+  ")->fetchAll();
+
+  return $freestyleExercises;
+}
+
+function displayAllExercisesFreestyleLog($userId)
+{
+  $session = getCurrentSession($userId);
+  $sessionId = $session['sessionId'];
+  $freestyle = intval(1);
+
+  $freestyleExercises = getFreestyleExercises($userId, $sessionId, $freestyle);
+
+  $count = 0;
+  $setCount = 0;
+
+  foreach ($freestyleExercises as $individualFreestyleExercise) {
+    $exerciseId = $individualFreestyleExercise['exerciseId'];
+    $exerciseData = getExerciseById($exerciseId);
+    $sessionExercise = getSessionExercise($sessionId, $exerciseId);
+    $sessionExerciseId = $sessionExercise['sessionExerciseId'];
+    $count++;
+    if (isset($_REQUEST['log_set'])) {
+      $setCount++;
+    }
+
+    echo "
+      <div style='width:65%;' class='texted_select_card'>
+      <button style='height:100px; border: 2px #A3F8AB solid;' class='side_nav_button' id='form_button_id_" . $count . "' onclick='showForm(" . $count . "); switchToConfirmButton(" . $count . ")' >
+            <img src='include/icons/plus.svg' alt='plus mark' />
+          </button>
+        <h3 class='header_text'>" . $exerciseData['exerciseName'] . "</h3>";
+
+    if (isset($_REQUEST['log_set'])) {
+      if ($_REQUEST['log_set'] == $exerciseId) {
+        $weight = $_REQUEST['weight'];
+        $reps = $_REQUEST['reps'];
+        $minutes = $_REQUEST['minutes'];
+        $steps = $_REQUEST['steps'];
+        logSet($weight, $reps, $minutes, $steps, $sessionExerciseId);
+      }
+    }
+    echo "
+        <form method='post' class='centered_form' action='log_session.php' id='log_form_" . $count . "' style='display:none;' >
+          <div class='card_options_row'>
+            <button type='submit' class='standard_button' value=" . $exerciseId . " name='log_set' id='log_button_id_" . $count . "' style='display:none;' onclick='submitForm(" . $count . ")'>
+              <img src='include/icons/check.svg' height='50' width='50' alt='checkmark' >
+            </button>
+            <h2 class='form_heading' id='set_count_id_" . $count . "' >" . $setCount . "</h2>
+            <button type='reset' class='standard_button' id='cancel_button_id_" . $count . "' style='display:none; border-color:red;'  onclick='hideForm(" . $count . ")' >
+              <img src='include/icons/close.svg' height='50' width='50' alt='close' >
+            </button>
+          </div>
+          <div class='log_set_form'>";
+    if ($exerciseData['use_reps'] == 1) {
+      echo "
+        <div class='log_input_wrapper'>
+          <h3 class='app_direction_text'>Reps</h3>
+          <input name='reps' type='number' min='1' class='form_input' />
+        </div>
+      ";
+    } else {
+      echo "
+        <input name='reps' type='hidden' class='form_input' value='0' />
+      ";
+    }
+
+    if ($exerciseData['use_minutes'] == 1) {
+      echo "
+        <div class='log_input_wrapper'>
+          <h3 class='app_direction_text'>Minutes</h3>
+          <input name='minutes' type='number' min='1' class='form_input' />
+        </div>
+      ";
+    } else {
+      echo "
+        <input name='minutes' type='hidden' class='form_input' value='0' />
+      ";
+    }
+
+    if ($exerciseData['use_steps'] == 1) {
+      echo "
+        <div class='log_input_wrapper'>
+          <h3 class='app_direction_text'>Steps</h3>
+          <input style='' name='steps' type='number' min='1' class='form_input' />
+        </div>
+      ";
+    } else {
+      echo "
+        <input name='steps' type='hidden' class='form_input' value='0' />
+      ";
+    }
+
+    if ($exerciseData['use_weight'] == 1) {
+      echo "
+        <div class='log_input_wrapper'>
+          <h3 class='app_direction_text'>Weight</h3>
+          <input name='weight' type='number' min='1' class='form_input' />
+        </div>
+      ";
+    } else {
+      echo "
+        <input name='weight' type='hidden' class='form_input' value='0' />
+      ";
+    }
+    echo "
+          </div>
+        </form>
+      </div>
+    ";
+  }
+
+  echo "
+    <script type='text/javascript'>
+
+      function showForm(card_count){
+        document.getElementById('log_form_'+card_count).style.display = 'flex';
+        document.getElementById('form_button_id_'+card_count).style.display='none';
+      }
+      function hideForm(card_count){
+        document.getElementById('log_form_'+card_count).style.display = 'none';
+        document.getElementById('form_button_id_'+card_count).style.display = 'flex';
+        document.getElementById('log_button_id_'+card_count).style.display = 'none';
+        document.getElementById('trash_button_id_'+card_count).style.display = 'flex';
+        document.getElementById('cancel_button_id_'+card_count).style.display = 'none';
+        document.getElementById('main_set_count_id_'+card_count).style.display = 'flex';
+      }
+      function switchToConfirmButton(confirm_button_number){
+        document.getElementById('log_button_id_'+confirm_button_number).style.display = 'flex';
+        document.getElementById('cancel_button_id_'+confirm_button_number).style.display = 'flex';
+        document.getElementById('main_set_count_id_'+confirm_button_number).style.display = 'none';
+      }
+    </script>
+  ";
 }
 
 // function displayAllExercises_fromAddExercise($userId)
@@ -439,8 +700,9 @@ function logSessionExercise($session, $routineId, $userId)
 
     $alreadyLogged = duplicateSessionExercise($sessionId, $exerciseId);
 
-    if (!$alreadyLogged){
-      db_Query("
+    if (!$alreadyLogged) {
+      db_Query(
+        "
         INSERT INTO session_exercise(sessionId, exerciseId, userId)
         VALUES(:sessionId, :exerciseId, :userId)
       ",
@@ -450,16 +712,14 @@ function logSessionExercise($session, $routineId, $userId)
           'userId' => $userId
         ]
       );
-    }
-    else{
-      ;
+    } else {;
     }
   }
 }
 
 function duplicateSessionExercise($sessionId, $exerciseId)
 {
-  
+
   $duplicateSessionExercise = db_Query("
     SELECT sessionExerciseId
     FROM session_exercise
@@ -470,52 +730,19 @@ function duplicateSessionExercise($sessionId, $exerciseId)
 
 /* Set Functions */
 
-function getSet($sessionExercise)
+function getSet($sessionExId)
 {
-
-  $sessionExerciseId = $sessionExercise['sessionExerciseId'];
-
   $setData = db_Query("
     SELECT *
     FROM `set`
-    WHERE sessionExerciseId = '$sessionExerciseId'
-  ")->fetch();
+    WHERE sessionExerciseId = '$sessionExId'
+  ")->fetchAll();
 
   return $setData;
 }
 
-function logCardioSet($time, $distance, $sessionExerciseId)
+function countSets($sessionExerciseId)
 {
-  db_Query(
-    "
-    INSERT INTO `set`(`time`, `distance`, `sessionExerciseId`)
-    VALUES(:time, :distance, :sessionExerciseId)
-  ",
-    [
-      'time' => intval($time),
-      'distance' => intval($distance),
-      'sessionExerciseId' => $sessionExerciseId
-    ]
-  );
-}
-
-
-function logWeightSet($weight, $reps, $sessionExerciseId)
-{
-  db_Query(
-    "
-    INSERT INTO `set`(`weight`, `reps`, `sessionExerciseId`)
-    VALUES(:weight, :reps, :sessionExerciseId)
-  ",
-    [
-      'weight' => intval($weight),
-      'reps' => intval($reps),
-      'sessionExerciseId' => $sessionExerciseId
-    ]
-  );
-}
-
-function countSets($sessionExerciseId){
 
   $allSets = db_Query("
     SELECT setId
@@ -527,57 +754,41 @@ function countSets($sessionExerciseId){
   return $setCount;
 }
 
-/* Log Functions */
-
-function displayCardioLog($sessionExercise)
+function logSet($weight, $reps, $minutes, $steps, $sessionExerciseId)
 {
+  $userId = $_SESSION['userId'];
 
-  $setData = getSet($sessionExercise);
-  $count = 0;
+  db_Query(
+    "
+    INSERT INTO `set`(weight, reps, minutes, steps, sessionExerciseId)
+    VALUES(:weight, :reps, :minutes, :steps, :sessionExerciseId)
+  ",
+    [
+      'weight' => $weight,
+      'reps' => $reps,
+      'minutes' => $minutes,
+      'steps' => $steps,
+      'sessionExerciseId' => $sessionExerciseId
+    ]
+  );
+}
 
-  echo "
-    <div class='dropdown_col'>
-      <div>
-        <p class='standard_text'>Set</p>
-      </div>";
-  foreach ($setData as $individualSet) {
-    $count++;
+function AddToFreestyle($exerciseId, $userId)
+{
+  $session = getCurrentSession($userId);
+  $sessionId = $session['sessionId'];
+  $freestyle = 1;
 
-    echo "
-    <div>
-      <p class='standard_text'>" . $count . "</p>
-    </div>";
-  }
-  echo "
-    </div>
-    <div class='dropdown_col'>
-      <div>
-        <p class='standard_text'>Minutes</p>
-      </div>";
-  foreach ($setData as $individualSet) {
-    $count++;
-
-    echo "
-    <div>
-      <p class='standard_text'>" . $individualSet['minutes'] . "</p>
-    </div>";
-  }
-  echo "
-    </div>
-    <div class='dropdown_col'>
-      <div>
-        <p class='standard_text'>Distance</p>
-      </div>";
-  foreach ($setData as $individualSet) {
-    $count++;
-
-    echo "
-      <div>
-        <p class='standard_text'>" . $individualSet['distance'] . "</p>
-      </div>";
-
-    echo "
-      </div>
-    ";
-  }
+  db_Query(
+    "
+    INSERT INTO session_exercise(exerciseId, userId, sessionId, freestyle)
+    VALUES(:exerciseId, :userId, :sessionId, :freestyle)
+  ",
+    [
+      'exerciseId' => $exerciseId,
+      'userId' => $userId,
+      'sessionId' => $sessionId,
+      'freestyle' => intval($freestyle)
+    ]
+  );
 }
