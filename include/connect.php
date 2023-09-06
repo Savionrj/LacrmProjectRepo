@@ -20,7 +20,7 @@ if (getenv("MOVEMINDER_IS_HEROKU")) {
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     PDO::ATTR_EMULATE_PREPARES   => false,
   );
-  $pdo = new PDO($dsn, $DbUser, $DbPassword, $opt);   //here is where php is connectng to the DB
+  $pdo = new PDO($dsn, $DbUser, $DbPassword, $opt);   //here is where php is connecting to the DB
 
   // You'll want to leave the rest of the file the same below here.
 
@@ -40,6 +40,7 @@ function db_Query($query, $values = array())
   global $pdo;
 
   $stmt = $pdo->prepare($query);
+
   if (!$stmt) {
     $ErrorInfo = $pdo->errorInfo();
     echo "\nPDO::errorInfo():\n";
@@ -48,4 +49,6 @@ function db_Query($query, $values = array())
   }
   $stmt->execute($values);
   return $stmt;
+
+
 }

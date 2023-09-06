@@ -13,15 +13,36 @@ if (isset($_REQUEST['routine_button'])) {
 }
 
 echo "
-  <form method='post'>
-    <button type=submit name='routine_button' class='select_card' value='1'>
-      <h3 class='header_text'>Freestyle</h3>
-    </button>
+  <form method='post' class='centered_form'>
+    <button type=submit name='routine_button' class='select_card' value='1'>Freestyle</button>
 
-    <p class='app_direction_text'>Or</br>Pick A Routine</p>";
+    <p class='direction_text'>Or</br>Pick A Routine</p>";
 
-displayAllRoutines($userId);
+    $allRoutines = getRoutines($userId);
+    if(!empty($allRoutines)){
+      displayAllRoutinesToLog($userId);
+    }
+    else{
+      echo "
+        <div class='full_page_text'>
+          <h3 class='direction_text'>No Routines Yet</h3>
+          <a href='new_routine.php'>
+            <h3 class='direction_text'>Create One Here</h3>
+          </a>
+        </div>
+      ";
+    }
 
 echo "
   </form>
+
+  <div class='bottom_nav'>
+  <div class='hidden_nav_button'>
+  </div>
+    <a href='index.php' class='nav_button' >
+      <img src='include/icons/home.svg' />
+    </a>
+    <div class='hidden_nav_button'>
+    </div>
+  </div>
 ";
